@@ -1,51 +1,77 @@
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Server {
-    private static List<Socket> clientSockets = new ArrayList<>();
+    private static List<DataOutputStream> clientOutputStreams = new ArrayList<>();
 
     public static void main(String[] args) {
         try {
-            ServerSocket serverSocket = new ServerSocket(12345); // Use the same port as in the client
-            System.out.println("Server started. Waiting for client...");
+            ServerSocket serverSocket = new ServerSocket(12345); // Choose a port
+            System.out.println("Server started. Waiting for clients...");
 
             while (true) {
                 Socket clientSocket = serverSocket.accept();
-                System.out.println("Client connected!");
-                clientSockets.add(clientSocket);
+                System.out.println("Client connected: " + clientSocket.getInetAddress());
 
-                // Handle client's input
-                new Thread(() -> {
-                    try {
-                        InputStream inputStream = clientSocket.getInputStream();
-                        byte[] buffer = new byte[1024];
-                        int bytesRead;
+                DataOutputStream clientOutputStream = new DataOutputStream(clientSocket.getOutputStream());
+                clientOutputStreams.add(clientOutputStream);
 
-                        while ((bytesRead = inputStream.read(buffer)) != -1) {
-                            String receivedText = new String(buffer, 0, bytesRead);
-                            System.out.println("Received: " + receivedText);
-
-                            // Broadcast the received text to all clients
-                            for (Socket socket : clientSockets) {
-                                try {
-                                    socket.getOutputStream().write(receivedText.getBytes());
-                                    socket.getOutputStream().flush();
-                                } catch (IOException e) {
-                                    // Handle potential client disconnection here
-                                }
-                            }
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }).start();
+                Thread clientThread = new Thread(new ClientHandler(clientSocket));
+                clientThread.start();
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private static class ClientHandler implements Runnable {
+        private Socket clientSocket;
+        private DataInputStream inputStream;
+
+        public ClientHandler(Socket clientSocket) {
+            this.clientSocket = clientSocket;
+            try {
+                inputStream = new DataInputStream(clientSocket.getInputStream());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public void run() {
+            try {
+                while (true) {
+                    int messageLength = inputStream.readInt();
+                    byte[] buffer = new byte[messageLength];
+                    inputStream.readFully(buffer);
+
+                    String receivedText = new String(buffer);
+                    System.out.println("Received from client: " + receivedText);
+
+                    distributeText(receivedText, clientSocket);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        private void distributeText(String text, Socket senderSocket) {
+            for (DataOutputStream outputStream : clientOutputStreams) {
+                if (!outputStream.equals(senderSocket)) {
+                    try {
+                        outputStream.writeInt(text.length());
+                        outputStream.writeBytes(text);
+                        outputStream.flush();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
         }
     }
 }
