@@ -1,6 +1,4 @@
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -46,11 +44,7 @@ public class Server {
         public void run() {
             try {
                 while (true) {
-                    int messageLength = inputStream.readInt();
-                    byte[] buffer = new byte[messageLength];
-                    inputStream.readFully(buffer);
-
-                    String receivedText = new String(buffer);
+                    String receivedText = inputStream.readUTF();
                     System.out.println("Received from client: " + receivedText);
 
                     distributeText(receivedText, clientSocket);
@@ -64,8 +58,7 @@ public class Server {
             for (DataOutputStream outputStream : clientOutputStreams) {
                 if (!outputStream.equals(senderSocket)) {
                     try {
-                        outputStream.writeInt(text.length());
-                        outputStream.writeBytes(text);
+                        outputStream.writeUTF(text);
                         outputStream.flush();
                     } catch (IOException e) {
                         e.printStackTrace();

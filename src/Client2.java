@@ -2,11 +2,9 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
-import java.util.Arrays;
+import javax.swing.*;
 
 public class Client2 {
     public static JTextArea textArea = new JTextArea();
@@ -59,11 +57,7 @@ public class Client2 {
                 DataInputStream inputStream = new DataInputStream(clientSocket.getInputStream());
 
                 while (true) {
-                    int messageLength = inputStream.readInt();
-                    byte[] buffer = new byte[messageLength];
-                    inputStream.readFully(buffer);
-
-                    String receivedText = new String(buffer);
+                    String receivedText = inputStream.readUTF();
                     if (!receivedText.equals(textArea.getText())) {
                         SwingUtilities.invokeLater(() -> textArea.setText(receivedText));
                     }
@@ -80,8 +74,7 @@ public class Client2 {
         try {
             String text = textArea.getText();
             if (!text.equals("")) {
-                outputStream.writeInt(text.length());
-                outputStream.writeBytes(text);
+                outputStream.writeUTF(text);
                 outputStream.flush();
             }
         } catch (IOException e) {
