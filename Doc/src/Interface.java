@@ -1,19 +1,22 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class Interface {
+public class Interface implements ActionListener{
     JFrame frame = new JFrame("Doc");
     JPanel navigationBar = new JPanel();
     JPanel leftPanel = new JPanel();
     JPanel workingPanel = new JPanel();
     JPanel rightPanel = new JPanel();
     JTextArea textArea = new JTextArea();
-    JLabel fileOption = new JLabel("File");
-    JLabel editOption = new JLabel("Edit");
-    JLabel viewOption = new JLabel("View");
-    JLabel empty = new JLabel();
-    ImageIcon logo = new ImageIcon("logo.jpg");
-    JLabel imgLogo = new JLabel();
+    JMenuBar menuBar = new JMenuBar();
+    JMenu fileMenu = new JMenu("File");
+    JMenu viewMenu = new JMenu("View");
+    JMenu editMenu = new JMenu("Edit");
+    JMenuItem saveMenu = new JMenuItem("Save");
+    JMenuItem loadMenu = new JMenuItem("Load");
+    JMenuItem exitMenu = new JMenuItem("Exit");
 
     public void render(){
 
@@ -25,23 +28,21 @@ public class Interface {
 
         //---------------navigation bar----------------------------
         navigationBar.setBackground(Color.lightGray);
-        navigationBar.setPreferredSize(new Dimension(100,60));
+        navigationBar.setPreferredSize(new Dimension(100,40));
         navigationBar.setLayout(new BorderLayout());
         frame.add(navigationBar,BorderLayout.NORTH);
 
-        //-------------adding options--------------------------
-        fileOption.setBounds(50,10,30,20);
-        editOption.setBounds(100,10,30,20);
-        viewOption.setBounds(150,10,30,20);
-        imgLogo.setBounds(0,10,30,30);
-        navigationBar.add(fileOption);
-        navigationBar.add(editOption);
-        navigationBar.add(viewOption);
-        logo.setImage(logo.getImage().getScaledInstance(40, 40, Image.SCALE_DEFAULT));
-        imgLogo.setIcon(logo);
-        navigationBar.add(imgLogo);
-        //-----------emptu label is added to adjust the bug----------
-        navigationBar.add(empty);
+        //-------------adding menu options--------------------------
+        fileMenu.add(saveMenu);
+        fileMenu.add(loadMenu);
+        fileMenu.add(exitMenu);
+        menuBar.add(fileMenu);
+        menuBar.add(editMenu);
+        menuBar.add(viewMenu);
+        navigationBar.add(menuBar);
+
+        //---------------adding events to file option-----------------
+        exitMenu.addActionListener(this);
 
         //---------------left panel--------------------------------------
         leftPanel.setBackground(Color.lightGray);
@@ -64,4 +65,10 @@ public class Interface {
         frame.add(rightPanel,BorderLayout.EAST);
     }
 
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if(e.getSource() == exitMenu){
+            frame.dispose();
+        }
+    }
 }
