@@ -2,6 +2,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.util.Arrays;
 
 public class Interface implements ActionListener{
     JFrame frame = new JFrame("Doc");
@@ -43,6 +47,12 @@ public class Interface implements ActionListener{
 
         //---------------adding events to file option-----------------
         exitMenu.addActionListener(this);
+        loadMenu.addActionListener(this);
+        saveMenu.addActionListener(this);
+
+        //---------------adding shortcut keys--------------------------
+        fileMenu.setMnemonic(KeyEvent.VK_F);//press Alt+f for file menu
+        exitMenu.setMnemonic(KeyEvent.VK_E);//press Alt+f and than Alt+e to exit directly
 
         //---------------left panel--------------------------------------
         leftPanel.setBackground(Color.lightGray);
@@ -69,6 +79,38 @@ public class Interface implements ActionListener{
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == exitMenu){
             frame.dispose();
+        }
+        if(e.getSource() == saveMenu){
+            saveFile();
+        }
+        if(e.getSource() == loadMenu){
+            loadFile();
+        }
+    }
+    public void saveFile(){
+        try{
+            FileWriter writer = new FileWriter("Current file");
+            writer.write(textArea.getText());
+            System.out.println("data saved sucessfully in file");
+            writer.close();
+        }
+        catch (Exception e){
+
+        }
+    }
+    public void loadFile(){
+        char[] array = new char[2000];
+        try{
+            FileReader input = new FileReader("Current file");
+
+            input.read(array);
+            System.out.println("Data in the file: ");
+            textArea.setText(Arrays.toString(array));
+
+            input.close();
+        }
+        catch (Exception e){
+            System.out.println("No file found");
         }
     }
 }
