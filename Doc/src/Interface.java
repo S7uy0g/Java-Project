@@ -53,6 +53,8 @@ public class Interface implements ActionListener{
         //---------------adding shortcut keys--------------------------
         fileMenu.setMnemonic(KeyEvent.VK_F);//press Alt+f for file menu
         exitMenu.setMnemonic(KeyEvent.VK_E);//press Alt+f and than Alt+e to exit directly
+        saveMenu.setMnemonic(KeyEvent.VK_S);//press Alt+F and than Alt+s to save the file
+        loadMenu.setMnemonic(KeyEvent.VK_L);//press Alt+f and then Alt+l to load the saved data
 
         //---------------left panel--------------------------------------
         leftPanel.setBackground(Color.lightGray);
@@ -66,7 +68,7 @@ public class Interface implements ActionListener{
         frame.add(workingPanel,BorderLayout.CENTER);
 
         //---------------adding text area in center panel------------
-        textArea.setPreferredSize(new Dimension(100,100));
+        textArea.setPreferredSize(new Dimension(40,100));
         workingPanel.add(textArea);
 
         //---------------right panel------------------------------------
