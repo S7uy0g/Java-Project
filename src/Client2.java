@@ -71,7 +71,6 @@ public class Client2 {
         //JPanel buttonPanel = new JPanel();
         //frame.setLayout(new BorderLayout());
         frame.add(scrollPane, BorderLayout.CENTER);
-        //frame.add(buttonPanel, BorderLayout.SOUTH);
 
         try {
             clientSocket = new Socket("localhost", 12345); // Change to your server's IP and port
