@@ -1,19 +1,21 @@
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.*;
 import java.net.Socket;
-import javax.swing.*;
 
 public class Client1 {
     public static JTextArea textArea = new JTextArea();
+    public static JPanel messagePanel = new JPanel();
+    public static JScrollPane messageScrollPane=new JScrollPane(messagePanel);
     public static Socket clientSocket;
     public static DataOutputStream outputStream;
+    public static JFrame frame = new JFrame();
 
     public static void main(String[] args) {
-        JFrame frame = new JFrame();
+
         JPanel navigationBar = new JPanel();
         JMenuBar menuBar = new JMenuBar();
         JMenu fileMenu = new JMenu("File");
@@ -25,6 +27,8 @@ public class Client1 {
         JPanel leftPanel = new JPanel();
         //JPanel workingPanel = new JPanel();
         JPanel rightPanel = new JPanel();
+        JButton sendButton = new JButton("Send");
+        JButton chooseFileButton = new JButton("Choose File");
 
         frame.setSize(500,500);
         frame.setLayout(new BorderLayout(5,5));
@@ -49,6 +53,8 @@ public class Client1 {
         menuBar.add(editMenu);
         menuBar.add(viewMenu);
         navigationBar.add(menuBar);
+        menuBar.add(sendButton);
+        menuBar.add(chooseFileButton);
 
         //---------------adding shortcut keys--------------------------
         fileMenu.setMnemonic(KeyEvent.VK_F);//press Alt+f for file menu
@@ -66,11 +72,20 @@ public class Client1 {
         rightPanel.setPreferredSize(new Dimension(130,100));
         frame.add(rightPanel,BorderLayout.EAST);
 
+        // Create a scroll pane for the message area
+        messageScrollPane.setPreferredSize(new Dimension(10, 100));
+        messagePanel.setLayout(new BoxLayout(messagePanel, BoxLayout.Y_AXIS));
+
+        // Add the message scroll pane to the frame at the top
+        frame.add(messageScrollPane, BorderLayout.CENTER);
+
         //-----------scroll pane-----------------------------------
         JScrollPane scrollPane = new JScrollPane(textArea);
+        scrollPane.setPreferredSize(new Dimension(10,20));
         //JPanel buttonPanel = new JPanel();
         //frame.setLayout(new BorderLayout());
-        frame.add(scrollPane, BorderLayout.CENTER);
+        frame.add(scrollPane, BorderLayout.SOUTH);
+        //frame.add(buttonPanel, BorderLayout.SOUTH);
 
         try {
             clientSocket = new Socket("localhost", 12345); // Change to your server's IP and port
@@ -79,20 +94,11 @@ public class Client1 {
             e.printStackTrace();
         }
 
-        textArea.getDocument().addDocumentListener(new DocumentListener() {
+        sendButton.addActionListener(new ActionListener() {
             @Override
-            public void insertUpdate(DocumentEvent e) {
+            public void actionPerformed(ActionEvent e) {
                 sendTextToServer();
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                sendTextToServer();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                // Not used for plain text documents
+                //textArea.setText("");
             }
         });
 
@@ -103,9 +109,12 @@ public class Client1 {
 
                 while (true) {
                     String receivedText = inputStream.readUTF();
-                    if (!receivedText.equals(textArea.getText())) {
-                        SwingUtilities.invokeLater(() -> textArea.setText(receivedText));
-                    }
+                    String text="Received:"+receivedText;
+                    JLabel label = new JLabel(text);
+                    messagePanel.add(label);
+                    messagePanel.revalidate();
+                    messagePanel.repaint(); // Ensure proper repainting
+                    messageScrollPane.getVerticalScrollBar().setValue(messageScrollPane.getVerticalScrollBar().getMaximum()); // Scroll to the bottom
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -117,10 +126,17 @@ public class Client1 {
 
     private static void sendTextToServer() {
         try {
-            String text = textArea.getText();
-            if (!text.equals("")) {
+            String msg = textArea.getText();
+            if (!msg.equals("")) {
+                String text=msg;
+                JLabel label = new JLabel(text);
+                messagePanel.add(label);
+                messagePanel.revalidate();
+                messagePanel.repaint(); // Ensure proper repainting
+                messageScrollPane.getVerticalScrollBar().setValue(messageScrollPane.getVerticalScrollBar().getMaximum()); // Scroll to the bottom
                 outputStream.writeUTF(text);
                 outputStream.flush();
+                textArea.setText("");
             }
         } catch (IOException e) {
             e.printStackTrace();
