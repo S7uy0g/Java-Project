@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Server {
-    private static List<DataOutputStream> clientOutputStreams = new ArrayList<>();
+    private static List<ClientHandler> clients = new ArrayList<>();
 
     public static void main(String[] args) {
         try {
@@ -16,10 +16,10 @@ public class Server {
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("Client connected: " + clientSocket.getInetAddress());
 
-                DataOutputStream clientOutputStream = new DataOutputStream(clientSocket.getOutputStream());
-                clientOutputStreams.add(clientOutputStream);
+                ClientHandler clientHandler = new ClientHandler(clientSocket);
+                clients.add(clientHandler);
 
-                Thread clientThread = new Thread(new ClientHandler(clientSocket));
+                Thread clientThread = new Thread(clientHandler);
                 clientThread.start();
             }
         } catch (IOException e) {
@@ -30,11 +30,13 @@ public class Server {
     private static class ClientHandler implements Runnable {
         private Socket clientSocket;
         private DataInputStream inputStream;
+        private DataOutputStream outputStream;
 
         public ClientHandler(Socket clientSocket) {
             this.clientSocket = clientSocket;
             try {
                 inputStream = new DataInputStream(clientSocket.getInputStream());
+                outputStream = new DataOutputStream(clientSocket.getOutputStream());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -47,19 +49,21 @@ public class Server {
                     String receivedText = inputStream.readUTF();
                     System.out.println("Received from client: " + receivedText);
 
-                    distributeText(receivedText, clientSocket);
+                    // Broadcast the received text to all other connected clients
+                    broadcastText(receivedText);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
-        private void distributeText(String text, Socket senderSocket) {
-            for (DataOutputStream outputStream : clientOutputStreams) {
-                if (!outputStream.equals(senderSocket)) {
+        // Method to broadcast text to all other connected clients
+        private void broadcastText(String text) {
+            for (ClientHandler client : clients) {
+                if (client != this) { // Exclude the sender
                     try {
-                        outputStream.writeUTF(text);
-                        outputStream.flush();
+                        client.outputStream.writeUTF(text);
+                        client.outputStream.flush();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
