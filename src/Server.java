@@ -2,10 +2,13 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Server {
-    private static List<ClientHandler> clients = new ArrayList<>();
+    private static List<String> clients = new ArrayList<>();
+    private static Map<String, Socket> clientMap = new HashMap<>();
 
     public static void main(String[] args) {
         try {
@@ -16,9 +19,12 @@ public class Server {
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("Client connected: " + clientSocket.getInetAddress());
 
-                ClientHandler clientHandler = new ClientHandler(clientSocket);
-                clients.add(clientHandler);
+                String clientName = "Client" + clients.size();
+                System.out.println(clientName);
+                clients.add(clientName);
+                clientMap.put(clientName, clientSocket);
 
+                ClientHandler clientHandler = new ClientHandler(clientSocket, clientName);
                 Thread clientThread = new Thread(clientHandler);
                 clientThread.start();
             }
@@ -29,14 +35,14 @@ public class Server {
 
     private static class ClientHandler implements Runnable {
         private Socket clientSocket;
+        private String clientName;
         private DataInputStream inputStream;
-        private DataOutputStream outputStream;
 
-        public ClientHandler(Socket clientSocket) {
+        public ClientHandler(Socket clientSocket, String clientName) {
             this.clientSocket = clientSocket;
+            this.clientName = clientName;
             try {
                 inputStream = new DataInputStream(clientSocket.getInputStream());
-                outputStream = new DataOutputStream(clientSocket.getOutputStream());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -47,7 +53,7 @@ public class Server {
             try {
                 while (true) {
                     String receivedText = inputStream.readUTF();
-                    System.out.println("Received from client: " + receivedText);
+                    System.out.println("Received from " + clientName + ": " + receivedText);
 
                     // Broadcast the received text to all other connected clients
                     broadcastText(receivedText);
@@ -57,13 +63,19 @@ public class Server {
             }
         }
 
-        // Method to broadcast text to all other connected clients
+        // Method to broadcast text to a specific client
         private void broadcastText(String text) {
-            for (ClientHandler client : clients) {
-                if (client != this) { // Exclude the sender
+            String[] parts = text.split(":", 2); // Split the message into recipient and message text
+            if (parts.length == 2) {
+                String recipientName = parts[0].trim();
+                String messageText = parts[1].trim();
+
+                Socket recipientSocket = clientMap.get(recipientName);
+                if (recipientSocket != null) {
                     try {
-                        client.outputStream.writeUTF(text);
-                        client.outputStream.flush();
+                        DataOutputStream recipientOutputStream = new DataOutputStream(recipientSocket.getOutputStream());
+                        recipientOutputStream.writeUTF(clientName + ": " + messageText);
+                        recipientOutputStream.flush();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

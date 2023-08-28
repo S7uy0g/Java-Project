@@ -1,8 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 import java.io.*;
 import java.net.Socket;
 
@@ -13,6 +11,9 @@ public class Client2 {
     public static Socket clientSocket;
     public static DataOutputStream outputStream;
     public static JFrame frame = new JFrame();
+    public static String Receiver;
+    public static String clientName="Ram";
+
 
     public static void main(String[] args) {
 
@@ -63,9 +64,17 @@ public class Client2 {
         loadMenu.setMnemonic(KeyEvent.VK_L);//press Alt+f and then Alt+l to load the saved data
 
         //---------------left panel--------------------------------------
+        JLabel person=new JLabel("Ram");
         leftPanel.setBackground(Color.lightGray);
         leftPanel.setPreferredSize(new Dimension(130,100));
+        leftPanel.add(person);
         frame.add(leftPanel,BorderLayout.WEST);
+        person.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                Receiver=person.getText();
+            }
+        });
 
         //---------------right panel------------------------------------
         rightPanel.setBackground(Color.lightGray);
@@ -126,9 +135,10 @@ public class Client2 {
 
     private static void sendTextToServer() {
         try {
-            String msg = textArea.getText();
-            if (!msg.equals("")) {
-                String text=msg;
+            String recipient = "Client0";
+            String messageText = textArea.getText();
+            if (!messageText.equals("")) {
+                String text = recipient + ":" + messageText; // Include recipient in the message
                 JLabel label = new JLabel(text);
                 messagePanel.add(label);
                 messagePanel.revalidate();
@@ -141,5 +151,9 @@ public class Client2 {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    public static void getName()
+    {
+        String name="Ram";
     }
 }

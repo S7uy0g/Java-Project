@@ -4,7 +4,7 @@ import java.awt.event.*;
 import java.io.*;
 import java.net.Socket;
 
-public class Client1 {
+public class Client3 {
     public static JTextArea textArea = new JTextArea();
     public static JPanel messagePanel = new JPanel();
     public static JScrollPane messageScrollPane=new JScrollPane(messagePanel);
