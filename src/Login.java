@@ -23,10 +23,10 @@ public class Login {
 
         // Create empty space components for top, bottom, left, and right
         loginForm.setPreferredSize(new Dimension(50,50));
-        top.setPreferredSize(new Dimension(100,100));
-        left.setPreferredSize(new Dimension(100,100));
-        right.setPreferredSize(new Dimension(100,100));
-        bottom.setPreferredSize(new Dimension(100,100));
+        top.setPreferredSize(new Dimension(100,175));
+        left.setPreferredSize(new Dimension(150,100));
+        right.setPreferredSize(new Dimension(150,100));
+        bottom.setPreferredSize(new Dimension(100,175));
 
         // Set up the login form panel
         loginForm.setLayout(new GridLayout(3, 2));
