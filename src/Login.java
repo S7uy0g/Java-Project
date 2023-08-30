@@ -2,9 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class Login implements ActionListener {
     JPanel top = new JPanel();
@@ -56,12 +54,33 @@ public class Login implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        String userNameEntered = usernameField.getText();
+        String passwordEnterd = passwordField.getText();
+        Boolean access = false;
         if(e.getSource() == loginButton){
             try {
                 Class.forName("com.mysql.cj.jdbc.Driver");
                 String url = "jdbc:mysql://localhost/java_db";
                 Connection conn = DriverManager.getConnection(url,"root","root");
                 System.out.println("connencted to database");
+
+                Statement stm = conn.createStatement();
+                ResultSet rs = stm.executeQuery("select * from Login");
+                while(rs.next()){
+                    String name = rs.getString("UserName");
+                    String password = rs.getString("Password");
+                    if(userNameEntered.equals(name) && passwordEnterd.equals(password)){
+                        access = true;
+                        break;
+                    }
+
+                }
+                if(access){
+                    System.out.println("accessd");
+                }
+                else {
+                    System.out.println("denied");
+                }
             } catch (ClassNotFoundException ex) {
 
             } catch (SQLException ex) {
