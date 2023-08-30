@@ -1,7 +1,12 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
-public class Login {
+public class Login implements ActionListener {
     JPanel top = new JPanel();
     JPanel left = new JPanel();
     JPanel right = new JPanel();
@@ -15,6 +20,8 @@ public class Login {
     JButton loginButton = new JButton("Login");
     JButton registerButton = new JButton("Register");
     public void render(){
+        loginButton.addActionListener(this);
+
         // Set up the main frame
         loginFrame.setSize(500, 500);
         loginFrame.setLocationRelativeTo(null);
@@ -47,5 +54,21 @@ public class Login {
         loginFrame.setVisible(true);
     }
 
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if(e.getSource() == loginButton){
+            try {
+                Class.forName("com.mysql.cj.jdbc.Driver");
+                String url = "jdbc:mysql://localhost/java_db";
+                Connection conn = DriverManager.getConnection(url,"root","root");
+                System.out.println("connencted to database");
+            } catch (ClassNotFoundException ex) {
+
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+
+        }
+    }
 }
 
