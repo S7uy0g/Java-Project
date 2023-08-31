@@ -57,39 +57,29 @@ public class Login implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == loginButton){
-            String userNameEntered;
-            String passwordEnterd;
+        if(e.getSource() == loginButton) {
+            String userNameEntered = usernameField.getText();
+            String passwordEntered = passwordField.getText();
 
-            //------------------Sending user entered data and storing response from server-----------------------
-            try {
-                Socket socket = new Socket("localhost",12300);
+            try (Socket socket = new Socket("localhost", 12300)) {
                 BufferedReader computerResponse = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 OutputStream outputStream = socket.getOutputStream();
-                PrintWriter printWriter  = new PrintWriter(outputStream,true);
+                PrintWriter printWriter = new PrintWriter(outputStream, true);
 
-                String sendingData , receivedResponse;
+                // Send username and password to the server
+                printWriter.println(userNameEntered);
+                printWriter.flush();
+                printWriter.println(passwordEntered);
+                printWriter.flush();
 
-               while (true){
-                   userNameEntered = usernameField.getText();
-                   passwordEnterd = passwordField.getText();
-
-                   sendingData = userNameEntered;
-                   printWriter.println(sendingData);
-                   printWriter.flush();
-
-                   sendingData = passwordEnterd;
-                   printWriter.println(sendingData);
-                   printWriter.flush();
-
-                   receivedResponse = computerResponse.readLine();
-                   System.out.println("Response:"+receivedResponse);
-
-               }
+                // Receive and process the server response
+                String receivedResponse = computerResponse.readLine();
+                System.out.println("Response: " + receivedResponse);
             } catch (IOException exception) {
                 throw new RuntimeException(exception);
             }
         }
     }
+
 }
 
