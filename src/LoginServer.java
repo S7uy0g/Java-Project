@@ -1,5 +1,6 @@
 import com.sun.source.tree.WhileLoopTree;
 
+import javax.swing.*;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -40,8 +41,10 @@ public class LoginServer {
                         }
                         if (access) {
                             sendingResponse = "access";
+
                         } else {
                             sendingResponse = "denied";
+
                         }
                     } catch (ClassNotFoundException ex) {
                         // Handle exceptions
@@ -59,5 +62,6 @@ public class LoginServer {
             throw new RuntimeException(e);
         }
     }
+
 
 }

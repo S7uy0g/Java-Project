@@ -75,10 +75,19 @@ public class Login implements ActionListener {
                 // Receive and process the server response
                 String receivedResponse = computerResponse.readLine();
                 System.out.println("Response: " + receivedResponse);
+                if(receivedResponse.equals("access")){
+                    messageBox(receivedResponse,"Login accepted");
+                }
+                else {
+                    messageBox("The login username or password is incorrect","Login denied");
+                }
             } catch (IOException exception) {
                 throw new RuntimeException(exception);
             }
         }
+    }
+    public static void messageBox(String message,String tittle){
+        JOptionPane.showMessageDialog(null,message,"MessageBox:"+tittle,JOptionPane.INFORMATION_MESSAGE);
     }
 
 }
