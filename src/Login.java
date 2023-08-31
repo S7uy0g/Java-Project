@@ -58,8 +58,8 @@ public class Login implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == loginButton){
-            String userNameEntered = usernameField.getText();
-            String passwordEnterd = passwordField.getText();
+            String userNameEntered;
+            String passwordEnterd;
 
             //------------------Sending user entered data and storing response from server-----------------------
             try {
@@ -70,17 +70,22 @@ public class Login implements ActionListener {
 
                 String sendingData , receivedResponse;
 
-                sendingData = userNameEntered;
-                printWriter.println(sendingData);
-                printWriter.flush();
+               while (true){
+                   userNameEntered = usernameField.getText();
+                   passwordEnterd = passwordField.getText();
 
-                sendingData = passwordEnterd;
-                printWriter.println(sendingData);
-                printWriter.flush();
+                   sendingData = userNameEntered;
+                   printWriter.println(sendingData);
+                   printWriter.flush();
 
-                receivedResponse = computerResponse.readLine();
-                System.out.println("Response:"+receivedResponse);
+                   sendingData = passwordEnterd;
+                   printWriter.println(sendingData);
+                   printWriter.flush();
 
+                   receivedResponse = computerResponse.readLine();
+                   System.out.println("Response:"+receivedResponse);
+
+               }
             } catch (IOException exception) {
                 throw new RuntimeException(exception);
             }

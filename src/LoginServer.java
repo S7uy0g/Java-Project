@@ -19,43 +19,45 @@ public class LoginServer {
 
             String sendingResponse="denied",userName,password;
 
-            userName = socketDataReader.readLine();
-            password = socketDataReader.readLine();
+            while(true){
+                userName = socketDataReader.readLine();
+                password = socketDataReader.readLine();
 
-            Boolean access = false;
+                Boolean access = false;
 
-            try {
-                Class.forName("com.mysql.cj.jdbc.Driver");
-                String url = "jdbc:mysql://localhost/java_db";
-                Connection conn = DriverManager.getConnection(url,"root","root");
-                System.out.println("connencted to database");
+                try {
+                    Class.forName("com.mysql.cj.jdbc.Driver");
+                    String url = "jdbc:mysql://localhost/java_db";
+                    Connection conn = DriverManager.getConnection(url,"root","root");
+                    System.out.println("connencted to database");
 
-                Statement stm = conn.createStatement();
-                ResultSet rs = stm.executeQuery("select * from Login");
-                while(rs.next()){
-                    String name = rs.getString("UserName");
-                    String passwordCheck = rs.getString("Password");
-                    if(userName.equals(name) && password.equals(passwordCheck)){
-                        access = true;
-                        break;
+                    Statement stm = conn.createStatement();
+                    ResultSet rs = stm.executeQuery("select * from Login");
+                    while(rs.next()){
+                        String name = rs.getString("UserName");
+                        String passwordCheck = rs.getString("Password");
+                        if(userName.equals(name) && password.equals(passwordCheck)){
+                            access = true;
+                            break;
+                        }
+
                     }
+                    if(access){
+                        sendingResponse = "access";
+                    }
+                    else {
+                        sendingResponse = "denied";
+                    }
+                } catch (ClassNotFoundException ex) {
 
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
                 }
-                if(access){
-                    sendingResponse = "access";
-                }
-                else {
-                    sendingResponse = "denied";
-                }
-            } catch (ClassNotFoundException ex) {
-
-            } catch (SQLException ex) {
-                throw new RuntimeException(ex);
-            }
 
                 printWriter.println(sendingResponse);
                 printWriter.flush();
 
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
