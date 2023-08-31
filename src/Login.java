@@ -2,6 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.*;
+import java.net.Socket;
 import java.sql.*;
 
 public class Login implements ActionListener {
@@ -17,6 +19,7 @@ public class Login implements ActionListener {
     JPasswordField passwordField = new JPasswordField(20);
     JButton loginButton = new JButton("Login");
     JButton registerButton = new JButton("Register");
+
     public void render(){
         loginButton.addActionListener(this);
 
@@ -54,39 +57,33 @@ public class Login implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        String userNameEntered = usernameField.getText();
-        String passwordEnterd = passwordField.getText();
-        Boolean access = false;
         if(e.getSource() == loginButton){
+            String userNameEntered = usernameField.getText();
+            String passwordEnterd = passwordField.getText();
+
+            //------------------Sending user entered data and storing response from server-----------------------
             try {
-                Class.forName("com.mysql.cj.jdbc.Driver");
-                String url = "jdbc:mysql://localhost/java_db";
-                Connection conn = DriverManager.getConnection(url,"root","root");
-                System.out.println("connencted to database");
+                Socket socket = new Socket("localhost",12300);
+                BufferedReader computerResponse = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                OutputStream outputStream = socket.getOutputStream();
+                PrintWriter printWriter  = new PrintWriter(outputStream,true);
 
-                Statement stm = conn.createStatement();
-                ResultSet rs = stm.executeQuery("select * from Login");
-                while(rs.next()){
-                    String name = rs.getString("UserName");
-                    String password = rs.getString("Password");
-                    if(userNameEntered.equals(name) && passwordEnterd.equals(password)){
-                        access = true;
-                        break;
-                    }
+                String sendingData , receivedResponse;
 
-                }
-                if(access){
-                    System.out.println("accessd");
-                }
-                else {
-                    System.out.println("denied");
-                }
-            } catch (ClassNotFoundException ex) {
+                sendingData = userNameEntered;
+                printWriter.println(sendingData);
+                printWriter.flush();
 
-            } catch (SQLException ex) {
-                throw new RuntimeException(ex);
+                sendingData = passwordEnterd;
+                printWriter.println(sendingData);
+                printWriter.flush();
+
+                receivedResponse = computerResponse.readLine();
+                System.out.println("Response:"+receivedResponse);
+
+            } catch (IOException exception) {
+                throw new RuntimeException(exception);
             }
-
         }
     }
 }
