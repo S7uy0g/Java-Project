@@ -22,6 +22,7 @@ public class Login implements ActionListener {
 
     public void render(){
         loginButton.addActionListener(this);
+        registerButton.addActionListener(this);
 
         // Set up the main frame
         loginFrame.setSize(500, 500);
@@ -84,6 +85,9 @@ public class Login implements ActionListener {
             } catch (IOException exception) {
                 throw new RuntimeException(exception);
             }
+        }
+        if(e.getSource() == registerButton){
+
         }
     }
     public static void messageBox(String message,String tittle){
