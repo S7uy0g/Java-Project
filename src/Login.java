@@ -87,7 +87,8 @@ public class Login implements ActionListener {
             }
         }
         if(e.getSource() == registerButton){
-
+            loginFrame.dispose();
+            Register obj = new Register();
         }
     }
     public static void messageBox(String message,String tittle){
