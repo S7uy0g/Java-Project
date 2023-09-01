@@ -2,6 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.*;
+import java.net.Socket;
 
 public class Register implements ActionListener {
     JFrame frame = new JFrame("ChatApp");
@@ -39,6 +41,33 @@ public class Register implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        try {
+            Socket socket = new Socket("localhost",12340);
+            BufferedReader computerResponse = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            OutputStream outputStream = socket.getOutputStream();
+            PrintWriter printWriter = new PrintWriter(outputStream, true);
+
+            // Send username and password to the server
+
+            String enteredName = userName.getText();
+            String enteredPassword = userPassword.getText();
+            printWriter.println(enteredName);
+            printWriter.flush();
+            printWriter.println(enteredPassword);
+            printWriter.flush();
+
+            // Receive and process the server response
+            String receivedResponse = computerResponse.readLine();
+            System.out.println("Response: " + receivedResponse);
+            if(receivedResponse.equals("Registered")){
+                JOptionPane.showMessageDialog(null,"sucessfull");
+            }
+            else {
+                JOptionPane.showMessageDialog(null,"unsucessfull");
+            }
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
 
     }
 }
