@@ -88,6 +88,10 @@ public class Login implements ActionListener {
         }
         if(e.getSource() == registerButton){
             loginFrame.dispose();
+            // for localhost testing only
+//            Runnable serverRunnable = new RegisterServer();
+//            Thread serverTherad =new Thread(serverRunnable);
+//            serverTherad.start();
             Register obj = new Register();
         }
     }

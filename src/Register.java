@@ -61,6 +61,9 @@ public class Register implements ActionListener {
             System.out.println("Response: " + receivedResponse);
             if(receivedResponse.equals("Registered")){
                 JOptionPane.showMessageDialog(null,"sucessfull");
+                frame.dispose();
+                Login obj = new Login();
+                obj.render();
             }
             else {
                 JOptionPane.showMessageDialog(null,"unsucessfull");

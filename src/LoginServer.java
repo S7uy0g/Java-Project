@@ -6,8 +6,9 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.*;
 
-public class LoginServer {
-    public static void main(String[] args) {
+public class LoginServer implements Runnable{
+    @Override
+    public void run() {
         try (ServerSocket serverSocket = new ServerSocket(12300)) {
             while (true) {
                 try (Socket socket = serverSocket.accept()) {
@@ -62,6 +63,4 @@ public class LoginServer {
             throw new RuntimeException(e);
         }
     }
-
-
 }

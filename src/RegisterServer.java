@@ -7,8 +7,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class RegisterServer {
-    public static void main(String[] args) {
+public class RegisterServer implements Runnable{
+    @Override
+    public void run() {
         try {
             ServerSocket serverSocket = new ServerSocket(12340);
             Socket socket = serverSocket.accept();
