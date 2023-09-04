@@ -9,20 +9,24 @@ import java.util.Map;
 public class Server {
     private static List<String> clients = new ArrayList<>();
     private static Map<String, Socket> clientMap = new HashMap<>();
-    private static DataInputStream inputStream;
 
     public static void main(String[] args) {
         try {
             ServerSocket serverSocket = new ServerSocket(12345); // Choose a port
             System.out.println("Server started. Waiting for clients...");
+            // use this code if the database is loaded and your localhost
+            Runnable loginServer = new LoginServer();
+            Thread loginThread = new Thread(loginServer);
+            loginThread.start();
+            Runnable registerServer = new RegisterServer();
+            Thread registerThread = new Thread(registerServer);
+            registerThread.start();
 
             while (true) {
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("Client connected: " + clientSocket.getInetAddress());
-                inputStream = new DataInputStream(clientSocket.getInputStream());
-                String clientName;
-                clientName = inputStream.readUTF();
-                //String clientName = "Client" + clients.size();
+
+                String clientName = "Client" + clients.size();
                 System.out.println(clientName);
                 clients.add(clientName);
                 clientMap.put(clientName, clientSocket);
