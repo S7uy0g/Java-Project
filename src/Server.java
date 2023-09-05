@@ -14,10 +14,11 @@ public class Server {
         try {
             ServerSocket serverSocket = new ServerSocket(12345); // Choose a port
             System.out.println("Server started. Waiting for clients...");
-            // use this code if the database is loaded and your localhost
+
             Runnable loginServer = new LoginServer();
             Thread loginThread = new Thread(loginServer);
             loginThread.start();
+
             Runnable registerServer = new RegisterServer();
             Thread registerThread = new Thread(registerServer);
             registerThread.start();
@@ -25,8 +26,8 @@ public class Server {
             while (true) {
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("Client connected: " + clientSocket.getInetAddress());
-
-                String clientName = "Client" + clients.size();
+                DataInputStream inputStream = new DataInputStream(clientSocket.getInputStream());
+                String clientName = inputStream.readUTF();
                 System.out.println(clientName);
                 clients.add(clientName);
                 clientMap.put(clientName, clientSocket);
@@ -70,7 +71,6 @@ public class Server {
             }
         }
 
-        // Method to broadcast text to a specific client
         private void broadcastText(String text) {
             String[] parts = text.split(":", 2); // Split the message into recipient and message text
             if (parts.length == 2) {
