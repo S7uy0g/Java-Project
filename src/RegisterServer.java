@@ -8,6 +8,11 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class RegisterServer implements Runnable{
+    public static void main(String[] args){
+        Runnable loginServer = new LoginServer();
+        Thread loginThread = new Thread(loginServer);
+        loginThread.start();
+    }
     @Override
     public void run() {
         try {
