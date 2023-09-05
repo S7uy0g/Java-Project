@@ -6,9 +6,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.*;
 
-public class LoginServer implements Runnable{
-    @Override
-    public void run() {
+public class LoginServer{
+    public static void main(String[] args){
         try (ServerSocket serverSocket = new ServerSocket(12300)) {
             while (true) {
                 try (Socket socket = serverSocket.accept()) {

@@ -8,26 +8,24 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class RegisterServer implements Runnable{
-    public static void main(String[] args){
-        Runnable loginServer = new LoginServer();
-        Thread loginThread = new Thread(loginServer);
-        loginThread.start();
-    }
     @Override
     public void run() {
         try {
             ServerSocket serverSocket = new ServerSocket(12340);
             Socket socket = serverSocket.accept();
+            System.out.println("connected");
             BufferedReader socketDataReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             OutputStream outputStream = socket.getOutputStream();
             PrintWriter printWriter = new PrintWriter(outputStream, true);
 
             String sendingResponse = "Registered";
-            String userName, password;
+            String userName, password, email;
 
             userName = socketDataReader.readLine();
+            email = socketDataReader.readLine();
             password = socketDataReader.readLine();
             System.out.println(userName);
+            System.out.println(email);
             System.out.println(password);
 
             try {
@@ -38,10 +36,11 @@ public class RegisterServer implements Runnable{
                     System.out.println("Database connected: ");
 
                     // Use PreparedStatement to safely insert data
-                    String insertQuery = "INSERT INTO Login (UserName, Password) VALUES (?, ?)";
+                    String insertQuery = "INSERT INTO Login (UserName, Email, Password) VALUES (?, ?, ?)";
                     try (PreparedStatement pstm = conn.prepareStatement(insertQuery)) {
                         pstm.setString(1, userName);
-                        pstm.setString(2, password);
+                        pstm.setString(2,email);
+                        pstm.setString(3, password);
 
                         // Execute the INSERT statement
                         int rowsAffected = pstm.executeUpdate();
