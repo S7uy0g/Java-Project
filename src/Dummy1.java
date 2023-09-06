@@ -4,6 +4,8 @@ import java.awt.event.*;
 import java.io.*;
 import java.net.Socket;
 import java.sql.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Dummy1 {
     public static JPanel messagePanel = new JPanel();
@@ -12,9 +14,10 @@ public class Dummy1 {
     public static DataOutputStream outputStream;
     public static JFrame frame = new JFrame();
     public static String Receiver = null;
-    JFrame Messegeframe;
     JTextField inputTextField;
     JLabel msgLabel;
+    Map<String, JFrame> openMessageFrames = new HashMap<>();
+    String clientName;
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
@@ -24,7 +27,7 @@ public class Dummy1 {
     }
 
     public void initializeApp(String LoginName) {
-        String LoginN = LoginName;
+        this.clientName = LoginName;
         JPanel navigationBar = new JPanel();
         JMenuBar menuBar = new JMenuBar();
         JMenu fileMenu = new JMenu("File");
@@ -86,14 +89,12 @@ public class Dummy1 {
                     @Override
                     public void mouseClicked(MouseEvent e) {
                         Receiver = person1.getText();
-                        openMessageFrame(Receiver);
+                        openOrFocusMessageFrame(Receiver);
                     }
                 });
             }
-        } catch (ClassNotFoundException ex) {
-            // Handle exceptions
-        } catch (SQLException ex) {
-            throw new RuntimeException(ex);
+        } catch (ClassNotFoundException | SQLException ex) {
+            ex.printStackTrace();
         }
 
         // Right panel
@@ -105,8 +106,7 @@ public class Dummy1 {
         try {
             clientSocket = new Socket("localhost", 12345);
             outputStream = new DataOutputStream(clientSocket.getOutputStream());
-            String name = LoginName;
-            outputStream.writeUTF(name);
+            outputStream.writeUTF(LoginName);
             outputStream.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -115,22 +115,86 @@ public class Dummy1 {
         frame.setVisible(true);
     }
 
-    // Inside Dummy1 class
+    private void openOrFocusMessageFrame(String recipient) {
+        if (openMessageFrames.containsKey(recipient)) {
+            openMessageFrames.get(recipient).requestFocus();
+        } else {
+            // Create or load the conversation table between the clients
+            String convo=getConversationTableName(clientName, recipient);
+            String conversationTable = convo.toLowerCase();
+            System.out.println(conversationTable);
+            try {
+                Class.forName("com.mysql.cj.jdbc.Driver");
+                String url = "jdbc:mysql://localhost/java_db";
+                Connection conn = DriverManager.getConnection(url, "root", "Joker1245780");
+                Statement stm = conn.createStatement();
+                ResultSet rs = stm.executeQuery("SELECT * FROM " + conversationTable);
+                if (!rs.next()) {
+                    // If there are no rows, it means there's no conversation history, so create the table
+                    createConversationTable(conn, conversationTable);
+                }
+                conn.close();
+            } catch (ClassNotFoundException | SQLException ex) {
+                ex.printStackTrace();
+            }
+            createMessageFrame(recipient);
+            // Load previous messages from the conversation table
+           // loadPreviousMessages(recipient);
+        }
+    }
 
-// ...
+    // Previous Msg Load
+    private void loadPreviousMessages(String recipient) {
+    }
 
-    private void openMessageFrame(String recipient) {
-        Messegeframe = new JFrame("Messenger");
-        Messegeframe.setSize(400, 300);
+    private static String getConversationTableName(String clientName, String recipient) {
+        return (clientName.compareTo(recipient) < 0 ? clientName + "_" + recipient : recipient + "_" + clientName);
+    }
+
+    private void createConversationTable(Connection conn, String tableName) throws SQLException {
+        Statement stmt = conn.createStatement();
+        String createTableQuery = "CREATE TABLE " + tableName + " (ID INT AUTO_INCREMENT PRIMARY KEY, Sender VARCHAR(255), Message TEXT)";
+        stmt.executeUpdate(createTableQuery);
+    }
+
+    private void createMessageFrame(String recipient) {
+        JFrame messageFrame = new JFrame("Messenger");
+        messageFrame.setSize(400, 300);
         JPanel msgPanel = new JPanel();
         JPanel bottomPanel = new JPanel();
-        Receiver = recipient;
         inputTextField = new JTextField(30);
         JButton sendButton = new JButton("Send");
         bottomPanel.setLayout(new BorderLayout());
         bottomPanel.add(inputTextField, BorderLayout.CENTER);
         bottomPanel.add(sendButton, BorderLayout.EAST);
-        Messegeframe.setVisible(true);
+        messageFrame.setVisible(true);
+        //Load Previous Msg
+        String conversationTable = getConversationTableName(clientName, recipient);
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            String url = "jdbc:mysql://localhost/java_db";
+            Connection conn = DriverManager.getConnection(url, "root", "Joker1245780");
+            Statement stm = conn.createStatement();
+            ResultSet rs = stm.executeQuery("SELECT Sender, Message FROM " + conversationTable);
+            System.out.println("Executed");
+            //messagePanel.removeAll(); // Clear existing messages before loading new ones
+            while (rs.next()) {
+                String sender = rs.getString("Sender");
+                String message = rs.getString("Message");
+                String msg = sender + ": " + message;
+                System.out.println(msg);
+                // Display the previous message in the message panel
+                msgLabel = new JLabel(msg);
+                msgPanel.add(msgLabel);
+            }
+            msgPanel.revalidate();
+            msgPanel.repaint();
+            scrollToBottom(messageScrollPane);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
 
         // Create a DataInputStream to receive messages from the server
         DataInputStream inputStream;
@@ -159,12 +223,12 @@ public class Dummy1 {
             e.printStackTrace();
         }
 
-        // Send button action listener remains the same
+        // Send button action listener
         sendButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 sendTextToServer(inputTextField.getText());
-                String msg = inputTextField.getText();
+                String msg = "Sent:" + inputTextField.getText();
                 // Display sent messages in msgLabel
                 msgLabel = new JLabel(msg);
                 msgPanel.add(msgLabel);
@@ -177,14 +241,20 @@ public class Dummy1 {
 
         msgPanel.setLayout(new BoxLayout(msgPanel, BoxLayout.Y_AXIS));
         JScrollPane scrollPane = new JScrollPane(msgPanel);
-        Messegeframe.add(scrollPane, BorderLayout.CENTER);
-        Messegeframe.add(bottomPanel, BorderLayout.SOUTH);
+        messageFrame.add(scrollPane, BorderLayout.CENTER);
+        messageFrame.add(bottomPanel, BorderLayout.SOUTH);
+
+        // Handle closing of the message frame
+        messageFrame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                openMessageFrames.remove(recipient);
+                e.getWindow().dispose();
+            }
+        });
     }
 
-// ...
-
-
-    private static void sendTextToServer(String msg) {
+    private void sendTextToServer(String msg) {
         try {
             String recipient = Receiver;
             String messageText = msg;
