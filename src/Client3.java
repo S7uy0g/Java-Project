@@ -4,7 +4,7 @@ import java.awt.event.*;
 import java.io.*;
 import java.net.Socket;
 
-public class Client1 {
+public class Client3 {
     public static JTextArea textArea = new JTextArea();
     public static JPanel messagePanel = new JPanel();
     public static JScrollPane messageScrollPane=new JScrollPane(messagePanel);
@@ -63,7 +63,7 @@ public class Client1 {
         loadMenu.setMnemonic(KeyEvent.VK_L);//press Alt+f and then Alt+l to load the saved data
 
         //---------------left panel--------------------------------------
-        JLabel person0=new JLabel("Shyam");
+        JLabel person0=new JLabel("Ram");
         leftPanel.setBackground(Color.lightGray);
         leftPanel.setPreferredSize(new Dimension(130,100));
         leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
@@ -80,7 +80,7 @@ public class Client1 {
             }
         });
 
-        JLabel person1=new JLabel("Hari");
+        JLabel person1=new JLabel("Shyam");
         leftPanel.add(person1);
         frame.add(leftPanel,BorderLayout.WEST);
         person1.addMouseListener(new MouseAdapter() {
@@ -114,7 +114,7 @@ public class Client1 {
         try {
             clientSocket = new Socket("localhost", 12345); // Change to your server's IP and port
             outputStream = new DataOutputStream(clientSocket.getOutputStream());
-            String name="Ram";
+            String name="Hari";
             outputStream.writeUTF(name);
             outputStream.flush();
         } catch (IOException e) {
