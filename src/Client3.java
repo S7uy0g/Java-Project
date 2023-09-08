@@ -12,7 +12,6 @@ public class Client3 {
     public static DataOutputStream outputStream;
     public static JFrame frame = new JFrame();
     public static String Receiver;
-    public static String clientName="Ram";
 
 
     public static void main(String[] args) {
@@ -64,15 +63,30 @@ public class Client3 {
         loadMenu.setMnemonic(KeyEvent.VK_L);//press Alt+f and then Alt+l to load the saved data
 
         //---------------left panel--------------------------------------
-        JLabel person=new JLabel("Ram");
+        JLabel person0=new JLabel("Ram");
         leftPanel.setBackground(Color.lightGray);
         leftPanel.setPreferredSize(new Dimension(130,100));
-        leftPanel.add(person);
+        leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
+        leftPanel.revalidate();
+        leftPanel.repaint(); // Ensure proper repainting
+        JScrollPane leftScrollPane=new JScrollPane();
+        leftScrollPane.getVerticalScrollBar().setValue(leftScrollPane.getVerticalScrollBar().getMaximum()); // Scroll to the bottom
+        leftPanel.add(person0);
         frame.add(leftPanel,BorderLayout.WEST);
-        person.addMouseListener(new MouseAdapter() {
+        person0.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                Receiver=person.getText();
+                Receiver=person0.getText();
+            }
+        });
+
+        JLabel person1=new JLabel("Shyam");
+        leftPanel.add(person1);
+        frame.add(leftPanel,BorderLayout.WEST);
+        person1.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                Receiver=person1.getText();
             }
         });
 
@@ -96,9 +110,13 @@ public class Client3 {
         frame.add(scrollPane, BorderLayout.SOUTH);
         //frame.add(buttonPanel, BorderLayout.SOUTH);
 
+        //Connection
         try {
             clientSocket = new Socket("localhost", 12345); // Change to your server's IP and port
             outputStream = new DataOutputStream(clientSocket.getOutputStream());
+            String name="Hari";
+            outputStream.writeUTF(name);
+            outputStream.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -135,7 +153,7 @@ public class Client3 {
 
     private static void sendTextToServer() {
         try {
-            String recipient = "Client1";
+            String recipient = Receiver;
             String messageText = textArea.getText();
             if (!messageText.equals("")) {
                 String text = recipient + ":" + messageText; // Include recipient in the message
@@ -151,9 +169,5 @@ public class Client3 {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-    public static void getName()
-    {
-        String name="Ram";
     }
 }

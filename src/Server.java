@@ -9,6 +9,7 @@ import java.util.Map;
 public class Server {
     private static List<String> clients = new ArrayList<>();
     private static Map<String, Socket> clientMap = new HashMap<>();
+    private static DataInputStream inputStream;
 
     public static void main(String[] args) {
         try {
@@ -18,8 +19,10 @@ public class Server {
             while (true) {
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("Client connected: " + clientSocket.getInetAddress());
-
-                String clientName = "Client" + clients.size();
+                inputStream = new DataInputStream(clientSocket.getInputStream());
+                String clientName;
+                clientName = inputStream.readUTF();
+                //String clientName = "Client" + clients.size();
                 System.out.println(clientName);
                 clients.add(clientName);
                 clientMap.put(clientName, clientSocket);
