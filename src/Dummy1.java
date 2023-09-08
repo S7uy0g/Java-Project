@@ -73,7 +73,7 @@ public class Dummy1 {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             String url = "jdbc:mysql://localhost/java_db";
-            Connection conn = DriverManager.getConnection(url, "root", "Joker1245780");
+            Connection conn = DriverManager.getConnection(url, "root", "root");
             System.out.println("Connected to the database");
             Statement stm = conn.createStatement();
             ResultSet rs = stm.executeQuery("select * from Login");
@@ -126,7 +126,7 @@ public class Dummy1 {
             try {
                 Class.forName("com.mysql.cj.jdbc.Driver");
                 String url = "jdbc:mysql://localhost/java_db";
-                Connection conn = DriverManager.getConnection(url, "root", "Joker1245780");
+                Connection conn = DriverManager.getConnection(url, "root", "root");
                 Statement stm = conn.createStatement();
                 ResultSet rs = stm.executeQuery("SELECT * FROM " + conversationTable);
                 if (!rs.next()) {
@@ -173,7 +173,7 @@ public class Dummy1 {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             String url = "jdbc:mysql://localhost/java_db";
-            Connection conn = DriverManager.getConnection(url, "root", "Joker1245780");
+            Connection conn = DriverManager.getConnection(url, "root", "root");
             Statement stm = conn.createStatement();
             ResultSet rs = stm.executeQuery("SELECT Sender, Message FROM " + conversationTable);
             System.out.println("Executed");
