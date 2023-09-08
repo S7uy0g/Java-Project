@@ -6,6 +6,9 @@ public class ForTestingUI {
 //        loginThread.start();
         Login obj = new Login();
         obj.render();
-//        Register obj = new Register();
+//        Register obj1 = new Register();
+//        Runnable registerServer = new RegisterServer();
+//        Thread serverThread = new Thread(registerServer);
+//        serverThread.start();
     }
 }

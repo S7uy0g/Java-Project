@@ -26,6 +26,7 @@ public class Login implements ActionListener {
 
         // Set up the main frame
         loginFrame.setSize(500, 500);
+        loginFrame.setResizable(false);
         loginFrame.setLocationRelativeTo(null);
         loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         loginFrame.setLayout(new BorderLayout());
@@ -89,9 +90,9 @@ public class Login implements ActionListener {
         if(e.getSource() == registerButton){
             loginFrame.dispose();
             // for localhost testing only
-//            Runnable serverRunnable = new RegisterServer();
-//            Thread serverTherad =new Thread(serverRunnable);
-//            serverTherad.start();
+            Runnable serverRunnable = new RegisterServer();
+            Thread serverTherad =new Thread(serverRunnable);
+            serverTherad.start();
             Register obj = new Register();
         }
     }

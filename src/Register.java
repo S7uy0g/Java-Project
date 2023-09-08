@@ -8,9 +8,11 @@ import java.net.Socket;
 public class Register implements ActionListener {
     JFrame frame = new JFrame("ChatApp");
     JPanel mainPanel = new JPanel();
-    JPanel registerForm = new JPanel(new GridLayout(3,2));
+    JPanel registerForm = new JPanel(new GridLayout(4,2));
     JLabel nameLabel = new JLabel("UserName: ");
     JTextField userName = new JTextField();
+    JLabel emailLabel = new JLabel("Email: ");
+    JTextField userEmail = new JTextField();
     JLabel passwordLabel = new JLabel("Password: ");
     JPasswordField userPassword = new JPasswordField();
     JButton register = new JButton("Register");
@@ -22,6 +24,8 @@ public class Register implements ActionListener {
         registerForm.setPreferredSize(new Dimension(300,150));
         registerForm.add(nameLabel);
         registerForm.add(userName);
+        registerForm.add(emailLabel);
+        registerForm.add(userEmail);
         registerForm.add(passwordLabel);
         registerForm.add(userPassword);
         registerForm.add(register);
@@ -47,11 +51,14 @@ public class Register implements ActionListener {
             OutputStream outputStream = socket.getOutputStream();
             PrintWriter printWriter = new PrintWriter(outputStream, true);
 
-            // Send username and password to the server
+            // Send username, email and password to the server
 
             String enteredName = userName.getText();
+            String enteredEmail = userEmail.getText();
             String enteredPassword = userPassword.getText();
             printWriter.println(enteredName);
+            printWriter.flush();
+            printWriter.println(enteredEmail);
             printWriter.flush();
             printWriter.println(enteredPassword);
             printWriter.flush();
