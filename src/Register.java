@@ -8,24 +8,37 @@ import java.net.Socket;
 public class Register implements ActionListener {
     JFrame frame = new JFrame("ChatApp");
     JPanel mainPanel = new JPanel();
+<<<<<<< HEAD
     JPanel registerForm = new JPanel(new GridLayout(4,2));
     JLabel nameLabel = new JLabel("UserName: ");
     JTextField userName = new JTextField();
     JLabel emailLabel = new JLabel("Email: ");
     JTextField userEmail = new JTextField();
+=======
+    JPanel registerForm = new JPanel(new GridLayout(3,2));
+    JLabel nameLabel = new JLabel("UserName: ");
+    JTextField userName = new JTextField();
+>>>>>>> Backup
     JLabel passwordLabel = new JLabel("Password: ");
     JPasswordField userPassword = new JPasswordField();
     JButton register = new JButton("Register");
 
+<<<<<<< HEAD
     Register(){
+=======
+    public void render(){
+>>>>>>> Backup
         mainPanel.setLayout(new FlowLayout(FlowLayout.CENTER,0,0));
         mainPanel.add(registerForm);
 
         registerForm.setPreferredSize(new Dimension(300,150));
         registerForm.add(nameLabel);
         registerForm.add(userName);
+<<<<<<< HEAD
         registerForm.add(emailLabel);
         registerForm.add(userEmail);
+=======
+>>>>>>> Backup
         registerForm.add(passwordLabel);
         registerForm.add(userPassword);
         registerForm.add(register);
@@ -51,6 +64,7 @@ public class Register implements ActionListener {
             OutputStream outputStream = socket.getOutputStream();
             PrintWriter printWriter = new PrintWriter(outputStream, true);
 
+<<<<<<< HEAD
             // Send username, email and password to the server
 
             String enteredName = userName.getText();
@@ -60,6 +74,18 @@ public class Register implements ActionListener {
             printWriter.flush();
             printWriter.println(enteredEmail);
             printWriter.flush();
+=======
+            // Send the "register" command to the server
+            /*printWriter.println("register");
+            printWriter.flush();*/
+
+            // Send username and password to the server
+
+            String enteredName = userName.getText();
+            String enteredPassword = userPassword.getText();
+            printWriter.println(enteredName);
+            printWriter.flush();
+>>>>>>> Backup
             printWriter.println(enteredPassword);
             printWriter.flush();
 

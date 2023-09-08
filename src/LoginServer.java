@@ -6,8 +6,15 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.*;
 
+<<<<<<< HEAD
 public class LoginServer{
     public static void main(String[] args){
+=======
+public class LoginServer implements Runnable{
+    String sendingResponse;
+    @Override
+    public void run() {
+>>>>>>> Backup
         try (ServerSocket serverSocket = new ServerSocket(12300)) {
             while (true) {
                 try (Socket socket = serverSocket.accept()) {
@@ -15,7 +22,10 @@ public class LoginServer{
                     OutputStream outputStream = socket.getOutputStream();
                     PrintWriter printWriter = new PrintWriter(outputStream, true);
 
+<<<<<<< HEAD
                     String sendingResponse = "denied";
+=======
+>>>>>>> Backup
                     String userName, password;
 
                     userName = socketDataReader.readLine();

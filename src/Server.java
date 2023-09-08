@@ -1,6 +1,10 @@
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+<<<<<<< HEAD
+=======
+import java.sql.*;
+>>>>>>> Backup
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,13 +13,17 @@ import java.util.Map;
 public class Server {
     private static List<String> clients = new ArrayList<>();
     private static Map<String, Socket> clientMap = new HashMap<>();
+<<<<<<< HEAD
     private static DataInputStream inputStream;
+=======
+>>>>>>> Backup
 
     public static void main(String[] args) {
         try {
             ServerSocket serverSocket = new ServerSocket(12345); // Choose a port
             System.out.println("Server started. Waiting for clients...");
 
+<<<<<<< HEAD
             while (true) {
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("Client connected: " + clientSocket.getInetAddress());
@@ -23,6 +31,21 @@ public class Server {
                 String clientName;
                 clientName = inputStream.readUTF();
                 //String clientName = "Client" + clients.size();
+=======
+            Runnable loginServer = new LoginServer();
+            Thread loginThread = new Thread(loginServer);
+            loginThread.start();
+
+            Runnable registerServer = new RegisterServer();
+            Thread registerThread = new Thread(registerServer);
+            registerThread.start();
+
+            while (true) {
+                Socket clientSocket = serverSocket.accept();
+                System.out.println("Client connected: " + clientSocket.getInetAddress());
+                DataInputStream inputStream = new DataInputStream(clientSocket.getInputStream());
+                String clientName = inputStream.readUTF();
+>>>>>>> Backup
                 System.out.println(clientName);
                 clients.add(clientName);
                 clientMap.put(clientName, clientSocket);
@@ -66,11 +89,19 @@ public class Server {
             }
         }
 
+<<<<<<< HEAD
         // Method to broadcast text to a specific client
         private void broadcastText(String text) {
             String[] parts = text.split(":", 2); // Split the message into recipient and message text
             if (parts.length == 2) {
                 String recipientName = parts[0].trim();
+=======
+        private void broadcastText(String text) {
+            String[] parts = text.split(":", 2); // Split the message into recipient and message text
+            String recipientName = null;
+            if (parts.length == 2) {
+                recipientName = parts[0].trim();
+>>>>>>> Backup
                 String messageText = parts[1].trim();
 
                 Socket recipientSocket = clientMap.get(recipientName);
@@ -84,6 +115,51 @@ public class Server {
                     }
                 }
             }
+<<<<<<< HEAD
+=======
+
+            // Save the message in the conversation table or create one if it doesn't exist
+            saveMessageToConversation(clientName, recipientName, text);
+        }
+
+        private void saveMessageToConversation(String sender, String recipient, String message) {
+            try {
+                Class.forName("com.mysql.cj.jdbc.Driver");
+                String url = "jdbc:mysql://localhost/java_db";
+                Connection conn = DriverManager.getConnection(url, "root", "Joker1245780");
+
+                // Combine sender and recipient names to create a unique table name
+                String tableName = sender.compareTo(recipient) < 0 ? sender + "_" + recipient : recipient + "_" + sender;
+
+                // Check if the conversation table exists, if not, create one
+                if (!doesTableExist(conn, tableName)) {
+                    createConversationTable(conn, tableName);
+                }
+
+                // Insert the message into the conversation table
+                String insertQuery = "INSERT INTO " + tableName + " (Sender, Message) VALUES (?, ?)";
+                PreparedStatement preparedStatement = conn.prepareStatement(insertQuery);
+                preparedStatement.setString(1, sender);
+                preparedStatement.setString(2, message);
+                preparedStatement.executeUpdate();
+
+                conn.close();
+            } catch (ClassNotFoundException | SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        private boolean doesTableExist(Connection conn, String tableName) throws SQLException {
+            DatabaseMetaData metaData = conn.getMetaData();
+            ResultSet tables = metaData.getTables(null, null, tableName, null);
+            return tables.next();
+        }
+
+        private void createConversationTable(Connection conn, String tableName) throws SQLException {
+            Statement stmt = conn.createStatement();
+            String createTableQuery = "CREATE TABLE " + tableName + " (ID INT AUTO_INCREMENT PRIMARY KEY, Sender VARCHAR(255), Message TEXT)";
+            stmt.executeUpdate(createTableQuery);
+>>>>>>> Backup
         }
     }
 }

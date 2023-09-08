@@ -7,6 +7,10 @@ import java.net.Socket;
 import java.sql.*;
 
 public class Login implements ActionListener {
+<<<<<<< HEAD
+=======
+    public boolean isLoggedIn;
+>>>>>>> Backup
     JPanel top = new JPanel();
     JPanel left = new JPanel();
     JPanel right = new JPanel();
@@ -19,14 +23,21 @@ public class Login implements ActionListener {
     JPasswordField passwordField = new JPasswordField(20);
     JButton loginButton = new JButton("Login");
     JButton registerButton = new JButton("Register");
+<<<<<<< HEAD
 
+=======
+    String userName;
+>>>>>>> Backup
     public void render(){
         loginButton.addActionListener(this);
         registerButton.addActionListener(this);
 
         // Set up the main frame
         loginFrame.setSize(500, 500);
+<<<<<<< HEAD
         loginFrame.setResizable(false);
+=======
+>>>>>>> Backup
         loginFrame.setLocationRelativeTo(null);
         loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         loginFrame.setLayout(new BorderLayout());
@@ -60,15 +71,28 @@ public class Login implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == loginButton) {
+<<<<<<< HEAD
             String userNameEntered = usernameField.getText();
             String passwordEntered = passwordField.getText();
 
+=======
+>>>>>>> Backup
             try (Socket socket = new Socket("localhost", 12300)) {
                 BufferedReader computerResponse = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 OutputStream outputStream = socket.getOutputStream();
                 PrintWriter printWriter = new PrintWriter(outputStream, true);
 
+<<<<<<< HEAD
                 // Send username and password to the server
+=======
+                // Send the "register" command to the server
+               /* printWriter.println("login");
+                printWriter.flush();*/
+
+                // Send username and password to the server
+                String userNameEntered = usernameField.getText();
+                String passwordEntered = passwordField.getText();
+>>>>>>> Backup
                 printWriter.println(userNameEntered);
                 printWriter.flush();
                 printWriter.println(passwordEntered);
@@ -78,6 +102,11 @@ public class Login implements ActionListener {
                 String receivedResponse = computerResponse.readLine();
                 System.out.println("Response: " + receivedResponse);
                 if(receivedResponse.equals("access")){
+<<<<<<< HEAD
+=======
+                    Dummy1 d1=new Dummy1();
+                    d1.initializeApp(userNameEntered);
+>>>>>>> Backup
                     messageBox(receivedResponse,"Login accepted");
                 }
                 else {
@@ -90,10 +119,18 @@ public class Login implements ActionListener {
         if(e.getSource() == registerButton){
             loginFrame.dispose();
             // for localhost testing only
+<<<<<<< HEAD
             Runnable serverRunnable = new RegisterServer();
             Thread serverTherad =new Thread(serverRunnable);
             serverTherad.start();
             Register obj = new Register();
+=======
+//            Runnable serverRunnable = new RegisterServer();
+//            Thread serverTherad =new Thread(serverRunnable);
+//            serverTherad.start();
+            Register obj = new Register();
+            obj.render();
+>>>>>>> Backup
         }
     }
     public static void messageBox(String message,String tittle){
