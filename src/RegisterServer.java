@@ -18,11 +18,13 @@ public class RegisterServer implements Runnable{
                     PrintWriter printWriter = new PrintWriter(outputStream, true);
 
                     String sendingResponse = "Registered";
-                    String userName, password;
+                    String userName, password, email;
 
                     userName = socketDataReader.readLine();
+                    email = socketDataReader.readLine();
                     password = socketDataReader.readLine();
                     System.out.println(userName);
+                    System.out.println(email);
                     System.out.println(password);
                     try {
                         Class.forName("com.mysql.cj.jdbc.Driver");
@@ -30,10 +32,11 @@ public class RegisterServer implements Runnable{
                         Connection conn = DriverManager.getConnection(url, "root", "Joker1245780");
                         System.out.println("Database connected: ");
                         // Use PreparedStatement to safely insert data
-                        String insertQuery = "INSERT INTO Login (UserName, Password) VALUES (?, ?)";
+                        String insertQuery = "INSERT INTO Login (UserName, Email, Password) VALUES (?, ?, ?)";
                         try (PreparedStatement pstm = conn.prepareStatement(insertQuery)) {
                             pstm.setString(1, userName);
-                            pstm.setString(2, password);
+                            pstm.setString(2,email);
+                            pstm.setString(3, password);
 
                             // Execute the INSERT statement
                             int rowsAffected = pstm.executeUpdate();
