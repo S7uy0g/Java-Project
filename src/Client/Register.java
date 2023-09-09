@@ -1,3 +1,7 @@
+package Client;
+
+import Client.Login;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;

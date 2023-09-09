@@ -1,10 +1,11 @@
+package Client;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
 import java.net.Socket;
-import java.sql.*;
 
 public class Login implements ActionListener {
     JPanel top = new JPanel();
@@ -78,10 +79,12 @@ public class Login implements ActionListener {
                 String receivedResponse = computerResponse.readLine();
                 System.out.println("Response: " + receivedResponse);
                 if(receivedResponse.equals("access")){
-                    messageBox(receivedResponse,"Login accepted");
+                    messageBox(receivedResponse,"Client.Login accepted");
+                    Client obj = new Client();
+                    loginFrame.dispose();
                 }
                 else {
-                    messageBox("The login username or password is incorrect","Login denied");
+                    messageBox("The login username or password is incorrect","Client.Login denied");
                 }
             } catch (IOException exception) {
                 throw new RuntimeException(exception);
@@ -90,9 +93,6 @@ public class Login implements ActionListener {
         if(e.getSource() == registerButton){
             loginFrame.dispose();
             // for localhost testing only
-            Runnable serverRunnable = new RegisterServer();
-            Thread serverTherad =new Thread(serverRunnable);
-            serverTherad.start();
             Register obj = new Register();
         }
     }
