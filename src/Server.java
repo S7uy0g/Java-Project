@@ -91,8 +91,9 @@ public class Server {
                 }
             }
 
+            String msg=parts[1].trim();
             // Save the message in the conversation table or create one if it doesn't exist
-            saveMessageToConversation(clientName, recipientName, text);
+            saveMessageToConversation(clientName, recipientName, msg);
         }
 
         private void saveMessageToConversation(String sender, String recipient, String message) {
