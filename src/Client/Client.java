@@ -13,8 +13,8 @@ public class Client {
     private static PrintWriter out;
     private static JTextArea chatTextArea;
     private static JTextField messageTextField;
-    Client(){
-        createGUI();
+    Client(String name){
+        createGUI(name);
 
         try {
             socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
@@ -24,7 +24,7 @@ public class Client {
                 try (BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
                     String message;
                     while ((message = in.readLine()) != null) {
-                        chatTextArea.append("Received: " + message + "\n");
+                        chatTextArea.append(message + "\n");
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -35,12 +35,7 @@ public class Client {
             e.printStackTrace();
         }
     }
-
-    public static void main(String[] args) {
-
-    }
-
-    private static void createGUI() {
+    private static void createGUI(String name) {
         JFrame frame = new JFrame("Chat App");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
@@ -57,7 +52,7 @@ public class Client {
         messageTextField.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                sendMessage();
+                sendMessage(name);
             }
         });
         panel.add(messageTextField, BorderLayout.SOUTH);
@@ -66,8 +61,8 @@ public class Client {
         frame.setVisible(true);
     }
 
-    private static void sendMessage() {
-        String message = messageTextField.getText();
+    private static void sendMessage(String name) {
+        String message = name+": "+ messageTextField.getText();
         if (!message.isEmpty()) {
             out.println(message);
             messageTextField.setText("");

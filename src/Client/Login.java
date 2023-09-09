@@ -79,9 +79,9 @@ public class Login implements ActionListener {
                 String receivedResponse = computerResponse.readLine();
                 System.out.println("Response: " + receivedResponse);
                 if(receivedResponse.equals("access")){
-                    messageBox(receivedResponse,"Client.Login accepted");
-                    Client obj = new Client();
                     loginFrame.dispose();
+                    messageBox(receivedResponse,"Client.Login accepted");
+                    Client obj = new Client(userNameEntered);
                 }
                 else {
                     messageBox("The login username or password is incorrect","Client.Login denied");
