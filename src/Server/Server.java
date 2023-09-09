@@ -2,6 +2,7 @@ package Server;
 
 import java.io.*;
 import java.net.*;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,6 +58,24 @@ public class Server {
                 String message;
                 while ((message = in.readLine()) != null) {
                     System.out.println("Received: " + message);
+                    try{
+                        Class.forName("com.mysql.cj.jdbc.Driver");
+                        String url = "jdbc:mysql://localhost/java_db";
+                        Connection conn = DriverManager.getConnection(url, "root", "root");
+                        String insertMessage = "insert into chatHistory(message) values (?)";
+                        try(PreparedStatement chatHistory = conn.prepareStatement(insertMessage)){
+                            chatHistory.setString(1,message);
+                            int queryUpdate = chatHistory.executeUpdate();
+                            if(queryUpdate > 0){
+                                System.out.println("Message saved");
+                            }
+                            else {
+                                System.out.println("Message not saved");
+                            }
+                        }
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
 
                     // Broadcast the message to all connected clients
                     for (Socket client : clients) {
