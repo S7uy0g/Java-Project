@@ -20,7 +20,7 @@ public class Initialize {
     JLabel msgLabel;
     Map<String, JFrame> openMessageFrames = new HashMap<>();
     String clientName;
-    public void initializeApp(String LoginName) {
+    public void initializeApp(String LoginName) throws SQLException {
         this.clientName = LoginName;
         JPanel navigationBar = new JPanel();
         JMenuBar menuBar = new JMenuBar();
@@ -31,6 +31,19 @@ public class Initialize {
         JPanel rightPanel = new JPanel();
         JTextField searchTextField = new JTextField(20);
         JButton searchButton = new JButton("Search");
+        JButton refreshButton = new JButton("Refresh");
+        refreshButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Call initializeApp again to refresh the app
+                try {
+                    frame.dispose();
+                    initializeApp(LoginName);
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
 
         frame.setSize(500, 500);
         frame.setLayout(new BorderLayout(5, 5));
@@ -49,6 +62,7 @@ public class Initialize {
         menuBar.add(fileMenu);
         menuBar.add(editMenu);
         menuBar.add(viewMenu);
+        menuBar.add(refreshButton);
         navigationBar.add(menuBar);
 
         // Left panel
@@ -72,59 +86,86 @@ public class Initialize {
 
 // Add the search button to the right panel
         rightPanel.add(searchButton);
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            String url = "jdbc:mysql://localhost/java_db";
-            Connection conn = DriverManager.getConnection(url, "root", "Joker1245780");
-            System.out.println("Connected to the database");
-            Statement stm = conn.createStatement();
-            ResultSet rs = stm.executeQuery("select * from Login");
-            while (rs.next()) {
-                String name = rs.getString("UserName");
-                if (name.equals(LoginName)) {
-                    continue;
-                }
-                JLabel person1 = new JLabel(name);
-                rightPanel.add(person1);
-                person1.addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mouseClicked(MouseEvent e) {
-                        Receiver = person1.getText();
-                        frame.dispose();
-                        createMessageFrame(Receiver,LoginName);
+        searchButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Component[] components = rightPanel.getComponents();
+                for (Component component : components) {
+                    if (component instanceof JLabel) {
+                        rightPanel.remove(component);
                     }
-                });
+                }
+                rightPanel.revalidate();
+                rightPanel.repaint();
+                Server s1=new Server();
+                ResultSet rs=s1.getFriends(inputTextField.getText());
+                try {
+                    while (rs.next()) {
+                        String name = rs.getString("UserName");
+                        Integer id=rs.getInt("ID");
+                        String idS=id.toString();
+                        if (name.equals(clientName)) {
+                            continue;
+                        }
+                        JLabel person1 = new JLabel(name);
+                        rightPanel.add(person1);
+                        person1.addMouseListener(new MouseAdapter() {
+                            @Override
+                            public void mouseClicked(MouseEvent e) {
+                                Receiver = person1.getText();
+                                //frame.dispose();
+                                addFriendFrame(LoginName,name,idS);
+                            }
+                        });
+                    }
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
             }
-        } catch (ClassNotFoundException | SQLException ex) {
-            ex.printStackTrace();
-        }
+        });
         frame.setVisible(true);
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            String url = "jdbc:mysql://localhost/java_db";
-            Connection conn = DriverManager.getConnection(url, "root", "Joker1245780");
-            System.out.println("Connected to the database");
-            Statement stm = conn.createStatement();
-            ResultSet rs = stm.executeQuery("select * from "+LoginName);
-            while (rs.next()) {
-                String name = rs.getString("UserName");
-                if (name.equals(LoginName)) {
-                    continue;
-                }
-                JLabel person1 = new JLabel(name);
-                rightPanel.add(person1);
-                person1.addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mouseClicked(MouseEvent e) {
-                        Receiver = person1.getText();
-                        frame.dispose();
-                        createMessageFrame(Receiver,LoginName);
-                    }
-                });
+        Server getFriendServer=new Server();
+        ResultSet rs=getFriendServer.getMyFriends(LoginName);
+        while (rs.next()) {
+            String name = rs.getString("UserName");
+            if (name.equals(LoginName)) {
+                continue;
             }
-        } catch (ClassNotFoundException | SQLException ex) {
-            ex.printStackTrace();
+            JLabel person1 = new JLabel(name);
+            leftPanel.add(person1);
+            person1.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    Receiver = person1.getText();
+                    frame.dispose();
+                    createMessageFrame(Receiver,LoginName);
+                }
+            });
         }
+    }
+
+    public static void addFriendFrame(String owner,String friendNameField,String friendID){
+        JFrame frame=new JFrame("Add Friend");
+        JButton addButton=new JButton("Add");
+        frame.setSize(300, 150);
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(2, 2));
+        JLabel nameLabel = new JLabel(friendNameField);
+        JLabel IDlabel=new JLabel(friendID);
+        panel.add(nameLabel);
+        panel.add(IDlabel);
+        panel.add(addButton);
+        addButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Server server=new Server();
+                server.addFriend(owner,friendNameField,friendID);
+                }
+            });
+
+        frame.add(panel);
+        frame.setVisible(true);
+
     }
 
     private static String getConversationTableName(String clientName, String recipient) {
@@ -237,7 +278,11 @@ public class Initialize {
             public void windowClosing(WindowEvent e) {
                 openMessageFrames.remove(recipient);
                 e.getWindow().dispose();
-                initializeApp(clientName);
+                try {
+                    initializeApp(clientName);
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         });
 

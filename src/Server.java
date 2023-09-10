@@ -1,3 +1,6 @@
+import javax.swing.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -39,6 +42,56 @@ public class Server {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public ResultSet getFriends(String name) {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            String url = "jdbc:mysql://localhost/java_db";
+            Connection conn = DriverManager.getConnection(url, "root", "Joker1245780");
+            System.out.println("Connected to the database");
+            Statement stm = conn.createStatement();
+            ResultSet rs = stm.executeQuery("select * from Login where UserName='"+name+"'");
+            return rs;
+        } catch (ClassNotFoundException | SQLException ex) {
+            ex.printStackTrace();
+            ResultSet rs=null;
+            return rs;
+        }
+    }
+    public void addFriend(String tableName,String friendName,String SID){
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            String url = "jdbc:mysql://localhost/java_db";
+            Connection conn = DriverManager.getConnection(url, "root", "Joker1245780");
+            System.out.println("Connected to the database");
+            // Insert the message into the conversation table
+            String insertQuery = "INSERT INTO " + tableName + " (ID, userName) VALUES (?, ?)";
+            PreparedStatement preparedStatement = conn.prepareStatement(insertQuery);
+            int id=Integer.parseInt(SID);
+            preparedStatement.setInt(1, id);
+            preparedStatement.setString(2, friendName);
+            preparedStatement.executeUpdate();
+
+            conn.close();
+        } catch (ClassNotFoundException | SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+    public ResultSet getMyFriends(String LoginName){
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            String url = "jdbc:mysql://localhost/java_db";
+            Connection conn = DriverManager.getConnection(url, "root", "Joker1245780");
+            System.out.println("Connected to the database");
+            Statement stm = conn.createStatement();
+            ResultSet rs = stm.executeQuery("select * from "+LoginName);
+            return rs;
+        } catch (ClassNotFoundException | SQLException ex) {
+            ex.printStackTrace();
+            ResultSet rs=null;
+            return rs;
         }
     }
 
