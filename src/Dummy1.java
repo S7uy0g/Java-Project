@@ -20,26 +20,25 @@ public class Dummy1 {
     String clientName;
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            Login obj = new Login();
-            obj.render();
-        });
+//        SwingUtilities.invokeLater(() -> {
+//            Login obj = new Login();
+//            obj.render();
+//        });
+        Dummy1 obj = new Dummy1();
+        obj.initializeApp("hello");
     }
 
     public void initializeApp(String LoginName) {
         this.clientName = LoginName;
         JPanel navigationBar = new JPanel();
         JMenuBar menuBar = new JMenuBar();
-        JMenu fileMenu = new JMenu("File");
-        JMenu viewMenu = new JMenu("View");
+        JMenu fileMenu = new JMenu("Settings");
+        JMenu viewMenu = new JMenu("Search");
         JMenu editMenu = new JMenu("Edit");
-        JMenuItem saveMenu = new JMenuItem("Save");
-        JMenuItem loadMenu = new JMenuItem("Load");
-        JMenuItem exitMenu = new JMenuItem("Exit");
         JPanel leftPanel = new JPanel();
         JPanel rightPanel = new JPanel();
-        JButton sendButton = new JButton("Send");
-        JButton chooseFileButton = new JButton("Choose File");
+//        JButton sendButton = new JButton("Send");
+//        JButton chooseFileButton = new JButton("Choose File");
 
         frame.setSize(500, 500);
         frame.setLayout(new BorderLayout(5, 5));
@@ -55,15 +54,12 @@ public class Dummy1 {
         frame.getContentPane().add(navigationBar, BorderLayout.NORTH);
 
         // Menu options
-        fileMenu.add(saveMenu);
-        fileMenu.add(loadMenu);
-        fileMenu.add(exitMenu);
         menuBar.add(fileMenu);
         menuBar.add(editMenu);
         menuBar.add(viewMenu);
         navigationBar.add(menuBar);
-        menuBar.add(sendButton);
-        menuBar.add(chooseFileButton);
+//        menuBar.add(sendButton);
+//        menuBar.add(chooseFileButton);
 
         // Left panel
         leftPanel.setBackground(Color.lightGray);
@@ -163,10 +159,10 @@ public class Dummy1 {
         JPanel msgPanel = new JPanel();
         JPanel bottomPanel = new JPanel();
         inputTextField = new JTextField(30);
-        JButton sendButton = new JButton("Send");
+//        JButton sendButton = new JButton("Send");
         bottomPanel.setLayout(new BorderLayout());
         bottomPanel.add(inputTextField, BorderLayout.CENTER);
-        bottomPanel.add(sendButton, BorderLayout.EAST);
+//        bottomPanel.add(sendButton, BorderLayout.EAST);
         messageFrame.setVisible(true);
         //Load Previous Msg
         String conversationTable = getConversationTableName(clientName, recipient);
@@ -224,20 +220,20 @@ public class Dummy1 {
         }
 
         // Send button action listener
-        sendButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                sendTextToServer(inputTextField.getText());
-                String msg = "Sent:" + inputTextField.getText();
-                // Display sent messages in msgLabel
-                msgLabel = new JLabel(msg);
-                msgPanel.add(msgLabel);
-                msgPanel.revalidate();
-                msgPanel.repaint();
-                inputTextField.setText("");
-                scrollToBottom(messageScrollPane);
-            }
-        });
+//        sendButton.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                sendTextToServer(inputTextField.getText());
+//                String msg = "Sent:" + inputTextField.getText();
+//                // Display sent messages in msgLabel
+//                msgLabel = new JLabel(msg);
+//                msgPanel.add(msgLabel);
+//                msgPanel.revalidate();
+//                msgPanel.repaint();
+//                inputTextField.setText("");
+//                scrollToBottom(messageScrollPane);
+//            }
+//        });
 
         msgPanel.setLayout(new BoxLayout(msgPanel, BoxLayout.Y_AXIS));
         JScrollPane scrollPane = new JScrollPane(msgPanel);
