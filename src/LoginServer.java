@@ -7,7 +7,7 @@ import java.net.Socket;
 import java.sql.*;
 
 public class LoginServer implements Runnable{
-    String sendingResponse;
+    String sendingResponse="access";
     @Override
     public void run() {
         try (ServerSocket serverSocket = new ServerSocket(12300)) {

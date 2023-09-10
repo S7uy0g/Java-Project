@@ -24,16 +24,16 @@ public class Initialize {
         this.clientName = LoginName;
         JPanel navigationBar = new JPanel();
         JMenuBar menuBar = new JMenuBar();
-        JMenu fileMenu = new JMenu("File");
-        JMenu viewMenu = new JMenu("View");
-        JMenu editMenu = new JMenu("Edit");
-        JMenuItem saveMenu = new JMenuItem("Save");
+        JMenu fileMenu = new JMenu("Settings");
+        JMenu viewMenu = new JMenu("Search");
+        JMenu editMenu = new JMenu("Profile");
+       /* JMenuItem saveMenu = new JMenuItem("Save");
         JMenuItem loadMenu = new JMenuItem("Load");
-        JMenuItem exitMenu = new JMenuItem("Exit");
+        JMenuItem exitMenu = new JMenuItem("Exit");*/
         JPanel leftPanel = new JPanel();
         JPanel rightPanel = new JPanel();
-        JButton sendButton = new JButton("Send");
-        JButton chooseFileButton = new JButton("Choose File");
+        /*JButton sendButton = new JButton("Send");*/
+       /* JButton chooseFileButton = new JButton("Choose File");*/
 
         frame.setSize(500, 500);
         frame.setLayout(new BorderLayout(5, 5));
@@ -49,15 +49,15 @@ public class Initialize {
         frame.getContentPane().add(navigationBar, BorderLayout.NORTH);
 
         // Menu options
-        fileMenu.add(saveMenu);
+       /* fileMenu.add(saveMenu);
         fileMenu.add(loadMenu);
-        fileMenu.add(exitMenu);
+        fileMenu.add(exitMenu);*/
         menuBar.add(fileMenu);
         menuBar.add(editMenu);
         menuBar.add(viewMenu);
         navigationBar.add(menuBar);
-        menuBar.add(sendButton);
-        menuBar.add(chooseFileButton);
+       /* menuBar.add(sendButton);
+        menuBar.add(chooseFileButton);*/
 
         // Left panel
         leftPanel.setBackground(Color.lightGray);
@@ -182,7 +182,7 @@ public class Initialize {
         }
 
         // Send button action listener
-        sendButton.addActionListener(new ActionListener() {
+       /* sendButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 sendTextToServer(inputTextField.getText());
@@ -195,7 +195,7 @@ public class Initialize {
                 inputTextField.setText("");
                 scrollToBottom(messageScrollPane);
             }
-        });
+        });*/
 
         msgPanel.setLayout(new BoxLayout(msgPanel, BoxLayout.Y_AXIS));
         JScrollPane scrollPane = new JScrollPane(msgPanel);
