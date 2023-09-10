@@ -27,13 +27,10 @@ public class Initialize {
         JMenu fileMenu = new JMenu("Settings");
         JMenu viewMenu = new JMenu("Search");
         JMenu editMenu = new JMenu("Profile");
-       /* JMenuItem saveMenu = new JMenuItem("Save");
-        JMenuItem loadMenu = new JMenuItem("Load");
-        JMenuItem exitMenu = new JMenuItem("Exit");*/
         JPanel leftPanel = new JPanel();
         JPanel rightPanel = new JPanel();
-        /*JButton sendButton = new JButton("Send");*/
-       /* JButton chooseFileButton = new JButton("Choose File");*/
+        JTextField searchTextField = new JTextField(20);
+        JButton searchButton = new JButton("Search");
 
         frame.setSize(500, 500);
         frame.setLayout(new BorderLayout(5, 5));
@@ -49,21 +46,32 @@ public class Initialize {
         frame.getContentPane().add(navigationBar, BorderLayout.NORTH);
 
         // Menu options
-       /* fileMenu.add(saveMenu);
-        fileMenu.add(loadMenu);
-        fileMenu.add(exitMenu);*/
         menuBar.add(fileMenu);
         menuBar.add(editMenu);
         menuBar.add(viewMenu);
         navigationBar.add(menuBar);
-       /* menuBar.add(sendButton);
-        menuBar.add(chooseFileButton);*/
 
         // Left panel
         leftPanel.setBackground(Color.lightGray);
         leftPanel.setPreferredSize(new Dimension(130, 100));
         leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
+        frame.add(leftPanel, BorderLayout.WEST);
 
+        // Right panel
+        rightPanel.setBackground(Color.lightGray);
+        rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS)); // Use BoxLayout with Y_AXIS
+        frame.add(rightPanel, BorderLayout.EAST);
+
+// Add the search text field to the right panel
+        inputTextField = new JTextField();
+        inputTextField.setMaximumSize(new Dimension(900, inputTextField.getPreferredSize().height));
+        rightPanel.add(inputTextField);
+
+// Add some vertical spacing between components
+        rightPanel.add(Box.createVerticalStrut(5)); // Adjust the spacing as needed
+
+// Add the search button to the right panel
+        rightPanel.add(searchButton);
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             String url = "jdbc:mysql://localhost/java_db";
@@ -77,8 +85,7 @@ public class Initialize {
                     continue;
                 }
                 JLabel person1 = new JLabel(name);
-                leftPanel.add(person1);
-                frame.add(leftPanel, BorderLayout.WEST);
+                rightPanel.add(person1);
                 person1.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
@@ -91,12 +98,33 @@ public class Initialize {
         } catch (ClassNotFoundException | SQLException ex) {
             ex.printStackTrace();
         }
-
-        // Right panel
-        rightPanel.setBackground(Color.lightGray);
-        rightPanel.setPreferredSize(new Dimension(130, 100));
-        frame.add(rightPanel, BorderLayout.EAST);
         frame.setVisible(true);
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            String url = "jdbc:mysql://localhost/java_db";
+            Connection conn = DriverManager.getConnection(url, "root", "Joker1245780");
+            System.out.println("Connected to the database");
+            Statement stm = conn.createStatement();
+            ResultSet rs = stm.executeQuery("select * from "+LoginName);
+            while (rs.next()) {
+                String name = rs.getString("UserName");
+                if (name.equals(LoginName)) {
+                    continue;
+                }
+                JLabel person1 = new JLabel(name);
+                rightPanel.add(person1);
+                person1.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        Receiver = person1.getText();
+                        frame.dispose();
+                        createMessageFrame(Receiver,LoginName);
+                    }
+                });
+            }
+        } catch (ClassNotFoundException | SQLException ex) {
+            ex.printStackTrace();
+        }
     }
 
     private static String getConversationTableName(String clientName, String recipient) {
@@ -182,7 +210,7 @@ public class Initialize {
         }
 
         // Send button action listener
-       /* sendButton.addActionListener(new ActionListener() {
+        sendButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 sendTextToServer(inputTextField.getText());
@@ -195,7 +223,7 @@ public class Initialize {
                 inputTextField.setText("");
                 scrollToBottom(messageScrollPane);
             }
-        });*/
+        });
 
         msgPanel.setLayout(new BoxLayout(msgPanel, BoxLayout.Y_AXIS));
         JScrollPane scrollPane = new JScrollPane(msgPanel);

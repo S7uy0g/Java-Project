@@ -2,10 +2,7 @@ import javax.swing.*;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class RegisterServer implements Runnable{
     @Override
@@ -32,7 +29,7 @@ public class RegisterServer implements Runnable{
                         Connection conn = DriverManager.getConnection(url, "root", "Joker1245780");
                         System.out.println("Database connected: ");
                         // Use PreparedStatement to safely insert data
-                        String insertQuery = "INSERT INTO Login (UserName, Email, Password) VALUES (?, ?, ?)";
+                        String insertQuery = "INSERT INTO login (UserName, Email, Password) VALUES (?, ?, ?)";
                         try (PreparedStatement pstm = conn.prepareStatement(insertQuery)) {
                             pstm.setString(1, userName);
                             pstm.setString(2,email);
@@ -50,15 +47,16 @@ public class RegisterServer implements Runnable{
                             printWriter.println("unsuccessful");
                             e.printStackTrace();
                         }
+                        conn.close();
                         }catch (ClassNotFoundException ex) {
                         // Handle exceptions
                     } catch (SQLException ex) {
                         throw new RuntimeException(ex);
                     }
-                }catch (IOException e){
+
+                }catch (IOException e) {
 
                 }
-
             }
         }catch (IOException e){
             throw new RuntimeException(e);

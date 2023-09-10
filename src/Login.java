@@ -60,14 +60,14 @@ public class Login implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == loginButton) {
-            try (Socket socket = new Socket("localhost", 12300)) {
+           /* try (Socket socket = new Socket("localhost", 12300)) {
                 BufferedReader computerResponse = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 OutputStream outputStream = socket.getOutputStream();
                 PrintWriter printWriter = new PrintWriter(outputStream, true);
 
                 // Send the "register" command to the server
-               /* printWriter.println("login");
-                printWriter.flush();*/
+               *//* printWriter.println("login");
+                printWriter.flush();*//*
 
                 // Send username and password to the server
                 String userNameEntered = usernameField.getText();
@@ -90,7 +90,9 @@ public class Login implements ActionListener {
                 }
             } catch (IOException exception) {
                 throw new RuntimeException(exception);
-            }
+            }*/
+            Initialize d1=new Initialize();
+            d1.initializeApp(usernameField.getText());
             loginFrame.dispose();
         }
         if(e.getSource() == registerButton){
