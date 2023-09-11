@@ -25,13 +25,21 @@ public class Initialize {
         JPanel navigationBar = new JPanel();
         JMenuBar menuBar = new JMenuBar();
         JMenu fileMenu = new JMenu("Settings");
-        JMenu viewMenu = new JMenu("Search");
+//        JMenu viewMenu = new JMenu("Search");
         JMenu editMenu = new JMenu("Profile");
         JPanel leftPanel = new JPanel();
+        JPanel centerPanel = new JPanel();
         JPanel rightPanel = new JPanel();
         JTextField searchTextField = new JTextField(20);
         JButton searchButton = new JButton("Search");
         JButton refreshButton = new JButton("Refresh");
+        JButton logoutButton = new JButton("Logout");
+        logoutButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                    frame.dispose();
+            }
+        });
         refreshButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -61,7 +69,7 @@ public class Initialize {
         // Menu options
         menuBar.add(fileMenu);
         menuBar.add(editMenu);
-        menuBar.add(viewMenu);
+//        menuBar.add(viewMenu);
         menuBar.add(refreshButton);
         navigationBar.add(menuBar);
 
@@ -69,7 +77,16 @@ public class Initialize {
         leftPanel.setBackground(Color.lightGray);
         leftPanel.setPreferredSize(new Dimension(130, 100));
         leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
+        leftPanel.add(logoutButton);
         frame.add(leftPanel, BorderLayout.WEST);
+
+        // center panel
+        JLabel lbl = new JLabel("Friend list");
+        centerPanel.setBackground(Color.lightGray);
+        centerPanel.setPreferredSize(new Dimension(130, 100));
+        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
+        centerPanel.add(lbl);
+        frame.add(centerPanel, BorderLayout.CENTER);
 
         // Right panel
         rightPanel.setBackground(Color.lightGray);
@@ -132,7 +149,7 @@ public class Initialize {
                 continue;
             }
             JLabel person1 = new JLabel(name);
-            leftPanel.add(person1);
+            centerPanel.add(person1);
             person1.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
