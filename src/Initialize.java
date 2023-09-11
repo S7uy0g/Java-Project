@@ -21,7 +21,7 @@ public class Initialize {
     Map<String, JFrame> openMessageFrames = new HashMap<>();
     String clientName;
     public void initializeApp(String LoginName) throws SQLException {
-        this.clientName = LoginName;
+        clientName = LoginName;
         JPanel navigationBar = new JPanel();
         JMenuBar menuBar = new JMenuBar();
         JMenu fileMenu = new JMenu("Settings");
@@ -199,7 +199,7 @@ public class Initialize {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             String url = "jdbc:mysql://localhost/java_db";
-            Connection conn = DriverManager.getConnection(url, "root", "Joker1245780");
+            Connection conn = DriverManager.getConnection(url, "root", "root");
             Statement stm = conn.createStatement();
             ResultSet rs = stm.executeQuery("SELECT Sender, Message FROM " + conversationTable);
             System.out.println("Executed");

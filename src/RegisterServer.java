@@ -26,7 +26,7 @@ public class RegisterServer implements Runnable{
                     try {
                         Class.forName("com.mysql.cj.jdbc.Driver");
                         String url = "jdbc:mysql://localhost/java_db";
-                        Connection conn = DriverManager.getConnection(url, "root", "Joker1245780");
+                        Connection conn = DriverManager.getConnection(url, "root", "root");
                         System.out.println("Database connected: ");
                         // Use PreparedStatement to safely insert data
                         String insertQuery = "INSERT INTO login (UserName, Email, Password) VALUES (?, ?, ?)";

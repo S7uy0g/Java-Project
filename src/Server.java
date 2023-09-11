@@ -49,7 +49,7 @@ public class Server {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             String url = "jdbc:mysql://localhost/java_db";
-            Connection conn = DriverManager.getConnection(url, "root", "Joker1245780");
+            Connection conn = DriverManager.getConnection(url, "root", "root");
             System.out.println("Connected to the database");
             Statement stm = conn.createStatement();
             ResultSet rs = stm.executeQuery("select * from Login where UserName='"+name+"'");
@@ -64,7 +64,7 @@ public class Server {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             String url = "jdbc:mysql://localhost/java_db";
-            Connection conn = DriverManager.getConnection(url, "root", "Joker1245780");
+            Connection conn = DriverManager.getConnection(url, "root", "root");
             System.out.println("Connected to the database");
             // Insert the message into the conversation table
             String insertQuery = "INSERT INTO " + tableName + " (ID, userName) VALUES (?, ?)";
@@ -83,7 +83,7 @@ public class Server {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             String url = "jdbc:mysql://localhost/java_db";
-            Connection conn = DriverManager.getConnection(url, "root", "Joker1245780");
+            Connection conn = DriverManager.getConnection(url, "root", "root");
             System.out.println("Connected to the database");
             Statement stm = conn.createStatement();
             ResultSet rs = stm.executeQuery("select * from "+LoginName);
@@ -153,7 +153,7 @@ public class Server {
             try {
                 Class.forName("com.mysql.cj.jdbc.Driver");
                 String url = "jdbc:mysql://localhost/java_db";
-                Connection conn = DriverManager.getConnection(url, "root", "Joker1245780");
+                Connection conn = DriverManager.getConnection(url, "root", "root");
 
                 // Combine sender and recipient names to create a unique table name
                 String tableName = sender.compareTo(recipient) < 0 ? sender + "_" + recipient : recipient + "_" + sender;

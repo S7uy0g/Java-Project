@@ -51,7 +51,7 @@ public class Register implements ActionListener {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             String url = "jdbc:mysql://localhost/java_db";
-            Connection conn = DriverManager.getConnection(url, "root", "Joker1245780");
+            Connection conn = DriverManager.getConnection(url, "root", "root");
             System.out.println("Database connected: ");
             //Create Friend List Table in database
             //Create Table

@@ -81,6 +81,7 @@ public class Login implements ActionListener {
                 String receivedResponse = computerResponse.readLine();
                 System.out.println("Response: " + receivedResponse);
                 if(receivedResponse.equals("access")){
+                    loginFrame.dispose();
                     Initialize d1=new Initialize();
                     d1.initializeApp(userNameEntered);
                     messageBox(receivedResponse,"Login accepted");
@@ -95,7 +96,6 @@ public class Login implements ActionListener {
             }
             /*Initialize d1=new Initialize();
             d1.initializeApp(usernameField.getText());*/
-            loginFrame.dispose();
         }
         if(e.getSource() == registerButton){
             loginFrame.dispose();

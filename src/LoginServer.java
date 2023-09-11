@@ -27,7 +27,7 @@ public class LoginServer implements Runnable{
                     try {
                         Class.forName("com.mysql.cj.jdbc.Driver");
                         String url = "jdbc:mysql://localhost/java_db";
-                        Connection conn = DriverManager.getConnection(url, "root", "Joker1245780");
+                        Connection conn = DriverManager.getConnection(url, "root", "root");
                         System.out.println("Connected to the database");
 
                         Statement stm = conn.createStatement();
