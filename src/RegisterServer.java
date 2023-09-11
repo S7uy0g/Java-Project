@@ -5,6 +5,7 @@ import java.net.Socket;
 import java.sql.*;
 
 public class RegisterServer implements Runnable{
+    UserInfo info = new UserInfo();
     @Override
     public void run() {
         try( ServerSocket serverSocket = new ServerSocket(12340)) {
@@ -26,7 +27,7 @@ public class RegisterServer implements Runnable{
                     try {
                         Class.forName("com.mysql.cj.jdbc.Driver");
                         String url = "jdbc:mysql://localhost/java_db";
-                        Connection conn = DriverManager.getConnection(url, "root", "root");
+                        Connection conn = DriverManager.getConnection(url, info.userNameDB, info.passwordDB);
                         System.out.println("Database connected: ");
                         // Use PreparedStatement to safely insert data
                         String insertQuery = "INSERT INTO login (UserName, Email, Password) VALUES (?, ?, ?)";

@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class Register implements ActionListener {
+    UserInfo info = new UserInfo();
     JFrame frame = new JFrame("ChatApp");
     JPanel mainPanel = new JPanel();
     JPanel registerForm = new JPanel(new GridLayout(4,2));
@@ -51,7 +52,7 @@ public class Register implements ActionListener {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             String url = "jdbc:mysql://localhost/java_db";
-            Connection conn = DriverManager.getConnection(url, "root", "root");
+            Connection conn = DriverManager.getConnection(url, info.userNameDB, info.passwordDB);
             System.out.println("Database connected: ");
             //Create Friend List Table in database
             //Create Table

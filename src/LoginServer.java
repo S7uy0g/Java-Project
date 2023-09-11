@@ -8,6 +8,7 @@ import java.sql.*;
 
 public class LoginServer implements Runnable{
     String sendingResponse="access";
+    UserInfo info = new UserInfo();
     @Override
     public void run() {
         try (ServerSocket serverSocket = new ServerSocket(12300)) {
@@ -27,7 +28,7 @@ public class LoginServer implements Runnable{
                     try {
                         Class.forName("com.mysql.cj.jdbc.Driver");
                         String url = "jdbc:mysql://localhost/java_db";
-                        Connection conn = DriverManager.getConnection(url, "root", "root");
+                        Connection conn = DriverManager.getConnection(url, info.userNameDB, info.passwordDB);
                         System.out.println("Connected to the database");
 
                         Statement stm = conn.createStatement();

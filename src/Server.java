@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Server {
+    UserInfo info = new UserInfo();
     private static List<String> clients = new ArrayList<>();
     private static Map<String, Socket> clientMap = new HashMap<>();
 
@@ -49,7 +50,7 @@ public class Server {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             String url = "jdbc:mysql://localhost/java_db";
-            Connection conn = DriverManager.getConnection(url, "root", "root");
+            Connection conn = DriverManager.getConnection(url, info.userNameDB, info.passwordDB);
             System.out.println("Connected to the database");
             Statement stm = conn.createStatement();
             ResultSet rs = stm.executeQuery("select * from Login where UserName='"+name+"'");
@@ -64,7 +65,7 @@ public class Server {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             String url = "jdbc:mysql://localhost/java_db";
-            Connection conn = DriverManager.getConnection(url, "root", "root");
+            Connection conn = DriverManager.getConnection(url, info.userNameDB, info.passwordDB);
             System.out.println("Connected to the database");
             // Insert the message into the conversation table
             String insertQuery = "INSERT INTO " + tableName + " (ID, userName) VALUES (?, ?)";
@@ -83,7 +84,7 @@ public class Server {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             String url = "jdbc:mysql://localhost/java_db";
-            Connection conn = DriverManager.getConnection(url, "root", "root");
+            Connection conn = DriverManager.getConnection(url, info.userNameDB, info.passwordDB);
             System.out.println("Connected to the database");
             Statement stm = conn.createStatement();
             ResultSet rs = stm.executeQuery("select * from "+LoginName);
@@ -150,10 +151,11 @@ public class Server {
         }
 
         private void saveMessageToConversation(String sender, String recipient, String message) {
+            UserInfo info = new UserInfo();
             try {
                 Class.forName("com.mysql.cj.jdbc.Driver");
                 String url = "jdbc:mysql://localhost/java_db";
-                Connection conn = DriverManager.getConnection(url, "root", "root");
+                Connection conn = DriverManager.getConnection(url, info.userNameDB, info.passwordDB);
 
                 // Combine sender and recipient names to create a unique table name
                 String tableName = sender.compareTo(recipient) < 0 ? sender + "_" + recipient : recipient + "_" + sender;
