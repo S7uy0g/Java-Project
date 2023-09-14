@@ -67,7 +67,7 @@ createNameTable(userName);
     {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            String url = "jdbc:mysql://172.25.20.60/java_db";
+            String url = "jdbc:mysql://localhost/java_db";
             Connection conn = DriverManager.getConnection(url, info.userNameDB, info.passwordDB);
             System.out.println("Database connected: ");
             //Create Friend List Table in database
