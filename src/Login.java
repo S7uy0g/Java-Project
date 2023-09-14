@@ -25,21 +25,55 @@ public class Login implements ActionListener {
         loginButton.addActionListener(this);
         registerButton.addActionListener(this);
 
+        // Set custom colors
+        Color backgroundColor = new Color(230, 240, 240); // Light gray background
+        Color labelColor = new Color(0, 102, 204); // Blue labels
+        Color buttonColor = new Color(20, 102, 0); // green buttons
+        Color textColor = Color.WHITE; // White text
+
+        // Apply custom colors to components
+        loginFrame.getContentPane().setBackground(backgroundColor);
+        top.setBackground(backgroundColor);
+        left.setBackground(backgroundColor);
+        right.setBackground(backgroundColor);
+        bottom.setBackground(backgroundColor);
+
+        usernameLabel.setForeground(labelColor);
+        passwordLabel.setForeground(labelColor);
+        usernameField.setBackground(textColor);
+
+        loginButton.setBackground(buttonColor);
+        loginButton.setForeground(textColor);
+        registerButton.setBackground(buttonColor);
+        registerButton.setForeground(textColor);
+
+        // Set up custom font style
+        Font customFont = new Font("Arial", Font.BOLD, 20); // You can choose a different font and size
+
+        // Apply custom font to labels, text fields, and buttons
+        usernameLabel.setFont(customFont);
+        passwordLabel.setFont(customFont);
+        usernameField.setFont(new Font("Arial", Font.PLAIN, 20));
+        passwordField.setFont(customFont);
+        loginButton.setFont(customFont);
+        registerButton.setFont(customFont);
+
+
         // Set up the main frame
-        loginFrame.setSize(500, 500);
+        loginFrame.setSize(600, 500);
         loginFrame.setLocationRelativeTo(null);
         loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         loginFrame.setLayout(new BorderLayout());
 
         // Create empty space components for top, bottom, left, and right
         loginForm.setPreferredSize(new Dimension(50,50));
-        top.setPreferredSize(new Dimension(100,175));
+        top.setPreferredSize(new Dimension(100,150));
         left.setPreferredSize(new Dimension(150,100));
         right.setPreferredSize(new Dimension(150,100));
-        bottom.setPreferredSize(new Dimension(100,175));
+        bottom.setPreferredSize(new Dimension(100,150));
 
         // Set up the login form panel
-        loginForm.setLayout(new GridLayout(3, 2));
+        loginForm.setLayout(new GridLayout(3, 2,10,10));
         loginForm.add(usernameLabel);
         loginForm.add(usernameField);
         loginForm.add(passwordLabel);

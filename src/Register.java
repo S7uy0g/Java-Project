@@ -14,7 +14,7 @@ public class Register implements ActionListener {
     JFrame frame = new JFrame("ChatApp");
     JPanel mainPanel = new JPanel();
     JPanel registerForm = new JPanel(new GridLayout(4,2));
-    JLabel nameLabel = new JLabel("UserName: ");
+    JLabel nameLabel = new JLabel("Username: ");
     JTextField userName = new JTextField();
     JLabel emailLabel = new JLabel("Email: ");
     JTextField userEmail = new JTextField();
@@ -26,19 +26,55 @@ public class Register implements ActionListener {
         mainPanel.setLayout(new FlowLayout(FlowLayout.CENTER,0,0));
         mainPanel.add(registerForm);
 
-        registerForm.setPreferredSize(new Dimension(300,150));
+        registerForm.setPreferredSize(new Dimension(350,150));
+
+        // Set custom font size
+        Font customFont = new Font("Arial", Font.BOLD, 20); // You can adjust the size
+
+        Dimension buttonSize = new Dimension(200, 50); // Adjust the size as needed
+        register.setPreferredSize(buttonSize);
+
+        nameLabel.setFont(customFont);
+        emailLabel.setFont(customFont);
+        passwordLabel.setFont(customFont);
+        userName.setFont(new Font("Arial", Font.PLAIN, 20));
+        userEmail.setFont(new Font("Arial", Font.PLAIN, 20));
+        userPassword.setFont(customFont);
+        register.setFont(customFont);
+
+        // Set custom colors
+        Color backgroundColor = new Color(240, 240, 240); // Light gray background
+        Color labelColor = new Color(0, 102, 204); // Blue labels
+        Color textColor = Color.WHITE; // White text
+        Color buttonColor = new Color(20, 102, 0); // green buttons
+
+        frame.getContentPane().setBackground(backgroundColor);
+        registerForm.setBackground(backgroundColor);
+        nameLabel.setForeground(labelColor);
+        emailLabel.setForeground(labelColor);
+        passwordLabel.setForeground(labelColor);
+        userName.setBackground(textColor);
+        userEmail.setBackground(textColor);
+        userPassword.setBackground(textColor);
+        register.setBackground(buttonColor);
+        register.setForeground(textColor);
+
         registerForm.add(nameLabel);
         registerForm.add(userName);
         registerForm.add(emailLabel);
         registerForm.add(userEmail);
         registerForm.add(passwordLabel);
         registerForm.add(userPassword);
-        registerForm.add(register);
+
+        // Add the registration form in the CENTER region
+        mainPanel.add(registerForm, BorderLayout.CENTER);
+
+        // Add the "Register" button in the SOUTH region
+        mainPanel.add(register, BorderLayout.SOUTH);
 
         register.addActionListener(this);
 
-
-        frame.setSize(500,500);
+        frame.setSize(450,300);
         frame.setLayout(new BorderLayout());
         frame.setVisible(true);
         frame.setLocationRelativeTo(null);
@@ -47,30 +83,7 @@ public class Register implements ActionListener {
         frame.add(mainPanel,BorderLayout.CENTER);
 
     }
-    public void createNameTable(String name)
-    {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            String url = "jdbc:mysql://localhost/java_db";
-            Connection conn = DriverManager.getConnection(url, info.userNameDB, info.passwordDB);
-            System.out.println("Database connected: ");
-            //Create Friend List Table in database
-            //Create Table
-            String createTableSQL = "CREATE TABLE " + name + " (ID INT PRIMARY KEY, userName VARCHAR(255))";
-            try (Statement stm = conn.createStatement()) {
-                stm.executeUpdate(createTableSQL);
-                System.out.println("Table");
-            } catch (SQLException e) {
-                e.printStackTrace();
-                System.out.println("No Table");
-            }
-            conn.close();
-        }catch (ClassNotFoundException ex) {
-            // Handle exceptions
-        } catch (SQLException ex) {
-            throw new RuntimeException(ex);
-        }
-    }
+
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -96,7 +109,7 @@ public class Register implements ActionListener {
             printWriter.flush();
             printWriter.println(enteredPassword);
             printWriter.flush();
-            createNameTable(enteredName);
+//            createNameTable(enteredName);
             // Receive and process the server response
             /*String table=tableResponse.readLine();
             System.out.println(table);*/

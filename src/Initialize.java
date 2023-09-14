@@ -20,6 +20,9 @@ public class Initialize {
     JLabel msgLabel;
     Map<String, JFrame> openMessageFrames = new HashMap<>();
     String clientName;
+
+    public static final Font buttonFont = new Font("Arial", Font.BOLD, 20); // Increase the font size to 20
+
     public void initializeApp(String LoginName) throws SQLException {
         clientName = LoginName;
         JPanel navigationBar = new JPanel();
@@ -34,10 +37,18 @@ public class Initialize {
         JButton searchButton = new JButton("Search");
         JButton refreshButton = new JButton("Refresh");
         JButton logoutButton = new JButton("Logout");
+
+        Color buttonTextColor = Color.WHITE;
+        Font labelFont = new Font("Arial", Font.BOLD, 18); // Adjust the font size for labels
+        Color buttonBackgroundColor = new Color(0, 128, 0); // Green background color
+        Color menuTextColor = new Color(0,0,153); // Blue text color
+
+
         logoutButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                    frame.dispose();
+            public void actionPerformed(ActionEvent e)
+            {
+                frame.dispose();
             }
         });
         refreshButton.addActionListener(new ActionListener() {
@@ -69,7 +80,20 @@ public class Initialize {
         // Menu options
         menuBar.add(fileMenu);
         menuBar.add(editMenu);
+
+
+        fileMenu.setFont(buttonFont);
+        fileMenu.setForeground(menuTextColor);
+
+        editMenu.setFont(buttonFont);
+        editMenu.setForeground(menuTextColor);
+
+
 //        menuBar.add(viewMenu);
+        refreshButton.setFont(buttonFont);
+        refreshButton.setForeground(buttonTextColor);
+        refreshButton.setBackground(new Color(0,0,153));
+
         menuBar.add(refreshButton);
         navigationBar.add(menuBar);
 
@@ -77,12 +101,17 @@ public class Initialize {
         leftPanel.setBackground(Color.lightGray);
         leftPanel.setPreferredSize(new Dimension(130, 100));
         leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
+        logoutButton.setFont(buttonFont);
+        logoutButton.setForeground(buttonTextColor);
+        logoutButton.setBackground(new Color(200,0,0));
+
         leftPanel.add(logoutButton);
         frame.add(leftPanel, BorderLayout.WEST);
 
         // center panel
         JLabel lbl = new JLabel("Friend list");
         centerPanel.setBackground(Color.lightGray);
+        lbl.setFont(labelFont);
         centerPanel.setPreferredSize(new Dimension(130, 100));
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
         centerPanel.add(lbl);
@@ -95,6 +124,9 @@ public class Initialize {
 
 // Add the search text field to the right panel
         inputTextField = new JTextField();
+        Font inputFieldFont = new Font("Arial", Font.PLAIN, 20); // Adjust font size as needed
+        inputTextField.setFont(inputFieldFont);
+        inputTextField.setPreferredSize(new Dimension(100, 30));
         inputTextField.setMaximumSize(new Dimension(900, inputTextField.getPreferredSize().height));
         rightPanel.add(inputTextField);
 
@@ -103,6 +135,10 @@ public class Initialize {
 
 // Add the search button to the right panel
         rightPanel.add(searchButton);
+        searchButton.setFont(buttonFont);
+        searchButton.setForeground(buttonTextColor);
+        searchButton.setBackground(new Color(0,0,153));
+
         searchButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -125,6 +161,9 @@ public class Initialize {
                             continue;
                         }
                         JLabel person1 = new JLabel(name);
+                        Font friendNameFont = new Font("Arial", Font.PLAIN, 20);
+                        person1.setFont(friendNameFont);
+
                         rightPanel.add(person1);
                         person1.addMouseListener(new MouseAdapter() {
                             @Override
@@ -149,6 +188,8 @@ public class Initialize {
                 continue;
             }
             JLabel person1 = new JLabel(name);
+            Font friendListFont = new Font("Arial", Font.PLAIN, 20); // Adjust the font size as needed
+            person1.setFont(friendListFont);
             centerPanel.add(person1);
             person1.addMouseListener(new MouseAdapter() {
                 @Override
@@ -164,11 +205,21 @@ public class Initialize {
     public static void addFriendFrame(String owner,String friendNameField,String friendID){
         JFrame frame=new JFrame("Add Friend");
         JButton addButton=new JButton("Add");
+
+        addButton.setFont(buttonFont);
+        addButton.setForeground(Color.WHITE); // Set the text color to white
+        addButton.setBackground(new Color(0,128,0)); // Set the background color to blue
+
         frame.setSize(300, 150);
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(2, 2));
         JLabel nameLabel = new JLabel(friendNameField);
         JLabel IDlabel=new JLabel(friendID);
+
+        Font friendDetailFont = new Font("Arial", Font.PLAIN, 20); // Adjust the font size as needed
+        nameLabel.setFont(friendDetailFont);
+        IDlabel.setFont(friendDetailFont);
+
         panel.add(nameLabel);
         panel.add(IDlabel);
         panel.add(addButton);
@@ -207,6 +258,10 @@ public class Initialize {
         JPanel bottomPanel = new JPanel();
         inputTextField = new JTextField(30);
         JButton sendButton = new JButton("Send");
+        Font sendButtonFont = new Font("Arial", Font.BOLD, 14);
+        sendButton.setFont(sendButtonFont);
+        sendButton.setBackground(new Color(0, 0, 153)); // Blue color
+        sendButton.setForeground(Color.WHITE);
         bottomPanel.setLayout(new BorderLayout());
         bottomPanel.add(inputTextField, BorderLayout.CENTER);
         bottomPanel.add(sendButton, BorderLayout.EAST);

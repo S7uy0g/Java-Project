@@ -54,13 +54,37 @@ public class RegisterServer implements Runnable{
                     } catch (SQLException ex) {
                         throw new RuntimeException(ex);
                     }
-
+createNameTable(userName);
                 }catch (IOException e) {
 
                 }
             }
         }catch (IOException e){
             throw new RuntimeException(e);
+        }
+    }
+    public void createNameTable(String name)
+    {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            String url = "jdbc:mysql://172.25.20.60/java_db";
+            Connection conn = DriverManager.getConnection(url, info.userNameDB, info.passwordDB);
+            System.out.println("Database connected: ");
+            //Create Friend List Table in database
+            //Create Table
+            String createTableSQL = "CREATE TABLE " + name + " (ID INT PRIMARY KEY, userName VARCHAR(255))";
+            try (Statement stm = conn.createStatement()) {
+                stm.executeUpdate(createTableSQL);
+                System.out.println("Table");
+            } catch (SQLException e) {
+                e.printStackTrace();
+                System.out.println("No Table");
+            }
+            conn.close();
+        }catch (ClassNotFoundException ex) {
+            // Handle exceptions
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
         }
     }
 }
