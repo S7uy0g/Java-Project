@@ -7,6 +7,7 @@ import java.net.Socket;
 import java.sql.*;
 
 public class Login implements ActionListener {
+    UserInfo info = new UserInfo();
     public boolean isLoggedIn;
     JPanel top = new JPanel();
     JPanel left = new JPanel();
@@ -94,7 +95,7 @@ public class Login implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == loginButton) {
-            try (Socket socket = new Socket("localhost", 12300)) {
+            try (Socket socket = new Socket(info.server, 12300)) {
                 BufferedReader computerResponse = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 OutputStream outputStream = socket.getOutputStream();
                 PrintWriter printWriter = new PrintWriter(outputStream, true);

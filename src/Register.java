@@ -88,7 +88,7 @@ public class Register implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         try {
-            Socket socket = new Socket("localhost",12340);
+            Socket socket = new Socket(info.server,12340);
             BufferedReader computerResponse = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             BufferedReader tableResponse = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             OutputStream outputStream = socket.getOutputStream();
