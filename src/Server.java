@@ -79,6 +79,7 @@ public class Server {
             ex.printStackTrace();
         }
     }
+    //Gets Friend
     public ResultSet getMyFriends(String LoginName){
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
