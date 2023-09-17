@@ -27,9 +27,9 @@ public class Initialize {
         clientName = LoginName;
         JPanel navigationBar = new JPanel();
         JMenuBar menuBar = new JMenuBar();
-        JMenu fileMenu = new JMenu("Settings");
+//        JMenu fileMenu = new JMenu("Settings");
 //        JMenu viewMenu = new JMenu("Search");
-        JMenu editMenu = new JMenu("Profile");
+//        JMenu editMenu = new JMenu("Profile");
         JPanel leftPanel = new JPanel();
         JPanel centerPanel = new JPanel();
         JPanel rightPanel = new JPanel();
@@ -48,7 +48,7 @@ public class Initialize {
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                frame.dispose();
+                System.exit(0);
             }
         });
         refreshButton.addActionListener(new ActionListener() {
@@ -78,15 +78,15 @@ public class Initialize {
         frame.getContentPane().add(navigationBar, BorderLayout.NORTH);
 
         // Menu options
-        menuBar.add(fileMenu);
-        menuBar.add(editMenu);
+//        menuBar.add(fileMenu);
+//        menuBar.add(editMenu);
 
 
-        fileMenu.setFont(buttonFont);
-        fileMenu.setForeground(menuTextColor);
+//        fileMenu.setFont(buttonFont);
+//        fileMenu.setForeground(menuTextColor);
 
-        editMenu.setFont(buttonFont);
-        editMenu.setForeground(menuTextColor);
+//        editMenu.setFont(buttonFont);
+//        editMenu.setForeground(menuTextColor);
 
 
 //        menuBar.add(viewMenu);
